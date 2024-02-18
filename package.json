@@ -1,0 +1,28 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ./cli/index.mjs --dev",
+    "build": "node ./cli/index.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "chalk": "^5.3.0",
+    "chokidar": "^3.6.0",
+    "glob": "^10.3.10",
+    "ora": "^8.0.1",
+    "postcss": "^8.4.35",
+    "postcss-preset-env": "^9.3.0",
+    "sass": "^1.71.0",
+    "spinnies": "^0.5.1",
+    "tailwindcss": "^3.4.1",
+    "terser": "^5.27.1",
+    "yargs": "^17.7.2"
+  }
+}
