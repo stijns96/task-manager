@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node ./cli/index.mjs --dev",
-    "build": "node ./cli/index.mjs"
+    "build": "node ./cli/index.mjs",
+    "clean:assets": "node ./cli/index.mjs --clean"
   },
   "keywords": [],
   "author": "",

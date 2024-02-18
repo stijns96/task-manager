@@ -1,3 +1,5 @@
+import fs from "fs";
+
 // Terminal Styling
 import chalk from "chalk";
 import ora from "ora";
@@ -50,12 +52,20 @@ class Cli {
     this.dev ? this.watch() : this.build();
   }
 
+  cleanThemeAssets() {
+    // Remove all files from theme/assets
+    const files = globSync(`${this.themeAssets}/*`, this.globOptions);
+    files.forEach((file) => fs.unlinkSync(file));
+  }
+
   /**
    * Build files
    * @returns {void}
    */
   build() {
     const startTime = this.buildStart();
+
+    this.cleanThemeAssets();
 
     // Compile Tailwind
     compileTailwind(this.tailwindFiles, this.spinners);

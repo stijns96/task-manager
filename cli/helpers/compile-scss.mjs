@@ -23,12 +23,16 @@ export async function compileScss(path, spinners) {
   });
 
   try {
+    const pathArr = path.split("/");
+    pathArr.pop();
+
+    const layerName = pathArr[3] === "snippets" ? "components" : pathArr[3];
+
     const { css } = sass.compile(path);
 
     const file = path
       .replace("src/scss/theme/", "")
-      .split("/")
-      .join("-")
+      .replaceAll("/", "-")
       .replace(".scss", ".css");
 
     const to = `theme/assets/${file}`;
@@ -36,19 +40,19 @@ export async function compileScss(path, spinners) {
     const result = await postcss([
       tailwind,
       autoprefixer,
-      postcssPresetEnv({
-        features: {
-          "cascade-layers": false,
-        },
-      }),
+      postcssPresetEnv(),
     ]).process(css, {
       from: path,
-      to: to,
+      to,
     });
 
     if (!result.css) throw new Error("No CSS to compile.");
 
-    fs.writeFileSync(to, result.css);
+    const layer = `@layer ${layerName} {
+      ${result.css}
+    }\n`;
+
+    fs.writeFileSync(to, layer);
 
     spinners.succeed(path, {
       text: `${chalk.green("Compiled")} ${chalk.blueBright(
@@ -57,7 +61,7 @@ export async function compileScss(path, spinners) {
     });
   } catch (error) {
     spinners.fail(path, {
-      text: `${chalk.red("Error compiling")} ${chalk.blueBright(path)}: ${
+      text: `${chalk.red("Error")} compiling ${chalk.blueBright(path)}: ${
         error.message
       }`,
     });

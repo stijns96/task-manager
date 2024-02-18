@@ -1,0 +1,23 @@
+.usp {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 0 15px;
+  &__item {
+    flex: 1;
+    text-align: center;
+  }
+  &__icon {
+    margin-bottom: 10px;
+    font-size: 30px;
+  }
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  &__desc {
+    font-size: 14px;
+    color: #666;
+  }
+}
