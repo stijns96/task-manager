@@ -16,6 +16,7 @@
     "autoprefixer": "^10.4.17",
     "chalk": "^5.3.0",
     "chokidar": "^3.6.0",
+    "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "ora": "^8.0.1",
     "postcss": "^8.4.35",
@@ -25,5 +26,8 @@
     "tailwindcss": "^3.4.1",
     "terser": "^5.27.1",
     "yargs": "^17.7.2"
+  },
+  "dependencies": {
+    "swiper": "^11.0.6"
   }
 }
