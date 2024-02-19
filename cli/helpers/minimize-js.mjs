@@ -1,8 +1,7 @@
-import fs from "fs";
+import fse from "fs-extra";
 
 // Terminal Styling
 import chalk from "chalk";
-import ora from "ora";
 
 import { minify } from "terser";
 
@@ -16,14 +15,15 @@ export async function minimizeJs(path, spinners) {
   });
 
   try {
-    const { code } = await minify(fs.readFileSync(path, "utf8"));
+    fse.read;
+    const { code } = await minify(fse.readFileSync(path, "utf8"));
 
     if (!code) throw new Error("No code to minify.");
 
     const file = path.split("/").pop();
     const to = `theme/assets/${file}`;
 
-    fs.writeFileSync(to, code);
+    fse.outputFileSync(to, code);
 
     spinners.succeed(path, {
       text: `${chalk.green("Minified")} ${chalk.blueBright(

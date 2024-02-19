@@ -1,8 +1,7 @@
-import fs from "fs";
+import fse from "fs-extra";
 
 // Terminal Styling
 import chalk from "chalk";
-import ora from "ora";
 
 // Compilers
 import * as sass from "sass";
@@ -40,7 +39,11 @@ export async function compileScss(path, spinners) {
     const result = await postcss([
       tailwind,
       autoprefixer,
-      postcssPresetEnv(),
+      postcssPresetEnv({
+        features: {
+          "cascade-layers": false,
+        },
+      }),
     ]).process(css, {
       from: path,
       to,
@@ -52,7 +55,7 @@ export async function compileScss(path, spinners) {
       ${result.css}
     }\n`;
 
-    fs.writeFileSync(to, layer);
+    fse.outputFileSync(to, layer);
 
     spinners.succeed(path, {
       text: `${chalk.green("Compiled")} ${chalk.blueBright(

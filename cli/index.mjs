@@ -1,8 +1,7 @@
-import fs from "fs";
+import fse from "fs-extra";
 
 // Terminal Styling
 import chalk from "chalk";
-import ora from "ora";
 import Spinnies from "spinnies";
 
 // Helpers
@@ -20,6 +19,7 @@ const argv = yargs(hideBin(process.argv)).argv;
 class Cli {
   constructor() {
     this.dev = argv.dev || false;
+    this.clean = argv.clean || false;
 
     this.srcAssets = "./src/assets";
     this.srcJs = "./src/js/**/*.js";
@@ -49,13 +49,13 @@ class Cli {
     });
     this.jsFiles = globSync(this.srcJs, this.globOptions);
 
+    // this.clean && this.cleanThemeAssets();
     this.dev ? this.watch() : this.build();
   }
 
   cleanThemeAssets() {
     // Remove all files from theme/assets
-    const files = globSync(`${this.themeAssets}/*`, this.globOptions);
-    files.forEach((file) => fs.unlinkSync(file));
+    fse.emptyDirSync(this.themeAssets, (err) => err && console.error(err));
   }
 
   /**

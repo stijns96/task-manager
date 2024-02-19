@@ -1,8 +1,7 @@
-import fs from "fs";
+import fse from "fs-extra";
 
 // Terminal Styling
 import chalk from "chalk";
-import ora from "ora";
 
 // Compilers
 import * as sass from "sass";
@@ -44,7 +43,7 @@ export async function compileTailwind(paths, spinners) {
     }
 
     // Schrijf de gecombineerde inhoud naar een uitvoerbestand
-    fs.writeFileSync(`theme/assets/main.css`, combinedContent);
+    fse.outputFileSync(`theme/assets/main.css`, combinedContent);
 
     // console.log(`Bestanden zijn samengevoegd naar ${outputFileName}`);
   } catch (error) {}
