@@ -15,7 +15,6 @@ export async function minimizeJs(path, spinners) {
   });
 
   try {
-    fse.read;
     const { code } = await minify(fse.readFileSync(path, "utf8"));
 
     if (!code) throw new Error("No code to minify.");
