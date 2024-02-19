@@ -6,15 +6,15 @@ import ora from "ora";
 import Spinnies from "spinnies";
 
 // Helpers
-import { minimizeJs } from "./helpers/minimize-js.mjs";
+import { compileTailwind } from "./helpers/compile-tailwind.mjs";
 import { compileScss } from "./helpers/compile-scss.mjs";
+import { minimizeJs } from "./helpers/minimize-js.mjs";
 
 // Other
 import { watch } from "chokidar";
 import { globSync } from "glob";
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
-import { compileTailwind } from "./helpers/compile-tailwind.mjs";
 const argv = yargs(hideBin(process.argv)).argv;
 
 class Cli {
