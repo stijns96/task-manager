@@ -1,4 +1,5 @@
 import fse from "fs-extra";
+import {pathToFileURL} from 'url';
 
 // Terminal Styling
 import chalk from "chalk";
@@ -27,7 +28,18 @@ export async function compileScss(path, spinners) {
 
     const layerName = pathArr[3] === "snippets" ? "components" : pathArr[3];
 
-    const { css } = sass.compile(path);
+    const { css } = sass.compile(path, {
+      importers: [{
+        // An importer that redirects relative URLs starting with "~" to
+        // `node_modules`.
+        findFileUrl(url) {
+          if (!url.startsWith('~')) return null;
+          const baseUrl = pathToFileURL('node_modules/'); // Construct base URL
+          const resolvedUrl = new URL(url.substring(1), baseUrl); // Use base URL to resolve
+          return resolvedUrl;
+        }
+      }]
+    });
 
     const file = path
       .replace("src/scss/theme/", "")
