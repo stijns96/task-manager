@@ -19,4 +19,8 @@ class Slider extends HTMLElement {
   disconnectedCallback() {
     this.swiper.destroy();
   }
+
+  static get observedAttributes() {
+    return ['data-swiper-slide'];
+  }
 }

@@ -164,28 +164,39 @@ class Cli {
     this.spinners.add("js-watcher", {
       text: "Warming up JS watchers",
     });
+    exec(`pnpm run watch:js`, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+        return;
+      }
+      console.log(stdout);
+    } );
 
-    watch(this.srcJs, this.watchOptions)
-      // On error
-      .on("error", (error) =>
-        this.spinners.fail("js-watcher", { text: `Watcher error: ${error}` })
-      )
+    // watch(this.srcJs, this.watchOptions)
+    //   // On error
+    //   .on("error", (error) =>
+    //     this.spinners.fail("js-watcher", { text: `Watcher error: ${error}` })
+    //   )
 
-      // On ready
-      .on("ready", () =>
-        this.spinners.succeed("js-watcher", { text: "JS watcher is ready" })
-      )
+    //   // On ready
+    //   .on("ready", () =>
+    //     this.spinners.succeed("js-watcher", { text: "JS watcher is ready" })
+    //   )
 
-      // On add
-      .on("add", (path) => chalk.blue(`File ${path} has been added`))
+    //   // On add
+    //   .on("add", (path) => chalk.blue(`File ${path} has been added`))
 
-      // On change
-      .on("change", (path) =>
-        minimizeJs(path.replaceAll("\\", "/"), this.spinners)
-      )
+    //   // On change
+    //   .on("change", (path) =>
+    //     minimizeJs(path.replaceAll("\\", "/"), this.spinners)
+    //   )
 
-      // On remove
-      .on("unlink", (path) => chalk.blue(`File ${path} has been removed`));
+    //   // On remove
+    //   .on("unlink", (path) => chalk.blue(`File ${path} has been removed`));
   }
 }
 

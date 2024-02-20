@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node ./cli/index.mjs --dev",
     "build": "node ./cli/index.mjs",
-    "build:js": "rollup --config",
+    "build:js": "rollup --c",
+    "watch:js": "rollup --c --w",
     "clean:assets": "node ./cli/index.mjs --clean"
   },
   "keywords": [],
