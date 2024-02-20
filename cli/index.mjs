@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import fse from "fs-extra";
 
 // Terminal Styling
@@ -74,7 +75,18 @@ class Cli {
     this.scssFiles.forEach((path) => compileScss(path, this.spinners));
 
     // Minimize JS
-    this.jsFiles.forEach((path) => minimizeJs(path, this.spinners));
+    // this.jsFiles.forEach((path) => minimizeJs(path, this.spinners));
+    exec(`pnpm run build:js`, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+        return;
+      }
+      console.log(stdout);
+    } );
 
     this.buildEnd(startTime);
   }
