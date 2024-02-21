@@ -1,4 +1,3 @@
-import { exec } from 'child_process';
 import fse from "fs-extra";
 
 // Terminal Styling
@@ -9,6 +8,7 @@ import Spinnies from "spinnies";
 import { compileTailwind } from "./helpers/compile-tailwind.mjs";
 import { compileScss } from "./helpers/compile-scss.mjs";
 import { minimizeJs } from "./helpers/minimize-js.mjs";
+import { bundleJs } from "./helpers/bundle-js.mjs";
 
 // Other
 import { watch } from "chokidar";
@@ -75,18 +75,8 @@ class Cli {
     this.scssFiles.forEach((path) => compileScss(path, this.spinners));
 
     // Minimize JS
+    bundleJs(this.jsFiles, this.spinners);
     // this.jsFiles.forEach((path) => minimizeJs(path, this.spinners));
-    exec(`pnpm run build:js`, (err, stdout, stderr) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (stderr) {
-        console.error(stderr);
-        return;
-      }
-      console.log(stdout);
-    } );
 
     this.buildEnd(startTime);
   }
@@ -174,7 +164,7 @@ class Cli {
         return;
       }
       console.log(stdout);
-    } );
+    });
 
     // watch(this.srcJs, this.watchOptions)
     //   // On error

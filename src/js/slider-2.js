@@ -1,4 +1,4 @@
-import Swiper from 'swiper';
+import Swiper from "swiper";
 
 class Slider extends HTMLElement {
   constructor() {
@@ -10,8 +10,8 @@ class Slider extends HTMLElement {
     this.swiper = new Swiper(this, {
       loop: true,
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
       },
       slidesPerView: 1,
     });
@@ -22,13 +22,13 @@ class Slider extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'slides-per-view') {
+    if (name === "slides-per-view") {
       this.swiper.params.slidesPerView = newValue;
       this.swiper.update();
     }
   }
 
   static get observedAttributes() {
-    return ['slides-per-view'];
+    return ["slides-per-view"];
   }
 }
