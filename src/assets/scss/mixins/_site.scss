@@ -1,0 +1,27 @@
+@use 'media-queries' as *;
+@use 'settings' as *;
+
+@mixin site-center {
+  max-width: var(--site-center);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin site-padding-left {
+  padding-left: var(--site-side-spacing);
+  @include mqmin($bp-md) {
+    padding-left: var(--site-side-spacing-md);
+  }
+}
+
+@mixin site-padding-right {
+  padding-right: var(--site-side-spacing);
+  @include mqmin($bp-md) {
+    padding-right: var(--site-side-spacing-md);
+  }
+}
+
+@mixin site-side-spacing {
+  @include site-padding-left;
+  @include site-padding-right;
+}

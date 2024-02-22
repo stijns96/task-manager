@@ -1,0 +1,17 @@
+@use '../../mixins' as *;
+@import '../snippets/rte.scss';
+
+.rich-text {
+  text-align: center;
+  overflow-wrap: break-word;
+  &__title,
+  &__text {
+    max-width: var(--site-center);
+    margin-right: auto;
+    margin-left: auto;
+  }
+  &__text,
+  &__button {
+    margin-bottom: calc(var(--element-spacing) * 2);
+  }
+}

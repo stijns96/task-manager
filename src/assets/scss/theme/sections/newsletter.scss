@@ -1,0 +1,21 @@
+@use '../../mixins' as *;
+
+.newsletter {
+  padding: 5vw 0;
+  text-align: center;
+  @include mqmin($bp-md) {
+    flex-shrink: 0;
+  }
+  &__button {
+    margin: 1rem 0 0;
+    width: fit-content;
+  }
+  &__heading {
+    margin-bottom: 1rem;
+  }
+  &-field {
+    &__message {
+      margin-top: 1.5rem;
+    }
+  }
+}

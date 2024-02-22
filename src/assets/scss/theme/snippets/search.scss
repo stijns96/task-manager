@@ -1,0 +1,172 @@
+@use '../../mixins' as *;
+
+// Used on two places, in the desktop header and mobile drawer.
+.search-modal {
+  position: relative;
+  z-index: calc(var(--z-index-sticky) + 1);
+  &__shadow {
+    background: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity var(--duration-default) ease-in-out;
+    z-index: 1;
+    visibility: hidden;
+    .header-search-is-open & {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  &__content {
+    box-sizing: border-box;
+    background-color: var(--color-white);
+    opacity: 0;
+    height: 100%;
+    display: none;
+    overflow: auto;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: rem(48);
+    @include mqmin($bp-header) {
+      overflow: unset;
+      position: absolute;
+      padding: rem(16) var(--site-side-spacing) rem(16) var(--site-side-spacing);
+      bottom: unset;
+      height: unset;
+    }
+    .header-search-is-open & {
+      display: block;
+      opacity: 1;
+    }
+  }
+  &__form {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    @include mqmin($bp-header) {
+      max-width: rem(320);
+    }
+    .menu-drawer & {
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: rem(16);
+    }
+    .field {
+      margin: 0;
+    }
+    .field__input {
+      background-color: transparent;
+      font-size: rem(16);
+      line-height: rem(28);
+      padding: rem(6) rem(48) rem(6) rem(40);
+      border: 1px solid transparent;
+      @include mqmax($bp-header) {
+        padding-top: rem(16);
+        padding-bottom: rem(16);
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: var(--color-border);
+      }
+      @include mqmin($bp-header) {
+        padding: rem(6) rem(12) rem(6) rem(40);
+      }
+      .menu-drawer & {
+        font-size: rem(14);
+        line-height: rem(20);
+        padding: rem(16) rem(0) rem(16) rem(24);
+      }
+      &::placeholder {
+        opacity: 1;
+      }
+    }
+  }
+  &__button {
+    display: block;
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: currentColor;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: rem(8);
+    transform:  translateY(-50%);
+    &:hover,
+    &:focus {
+      color: var(--color-brand-primary);
+    }
+    .menu-drawer & {
+      left: 0;
+    }
+    .icon {
+      width: rem(24);
+      height: rem(24);
+      .menu-drawer & {
+        width: rem(16);
+        height: rem(16);
+      }
+    }
+  }
+  &__close-button-big {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: rem(12);
+    position: absolute;
+    top: rem(24);
+    left: rem(16);
+  }
+  &__close-button {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: rem(12);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    margin-right: 0;
+    &:hover,
+    &:focus {
+      color: var(--color-brand-primary);
+    }
+    @include mqmin($bp-header) {
+      margin-right: var(--site-side-spacing-md);
+    }
+    .no-js & {
+      display: none;
+    }
+  }
+}
+
+
+/* Remove extra spacing for search inputs in Safari */
+input::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.modal__toggle {
+  appearance: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+predictive-search {
+  @include mqmax($bp-header) {
+    display: block;
+    position: relative;
+  }
+}

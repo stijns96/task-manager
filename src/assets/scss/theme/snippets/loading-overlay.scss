@@ -1,0 +1,26 @@
+@use '../../mixins' as *;
+
+.loading-overlay {
+  &__spinner {
+    @include position-center;
+    width: 2rem;
+    z-index: 10;
+    display: inline-block;
+  }
+  &:not(.hidden) + .totals {
+    opacity: 0;
+  }
+  .path {
+    stroke-dasharray: 280;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    stroke: var(--color-brand-text);
+    animation: dash 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes dash {
+  0% {stroke-dashoffset: 280}
+  50% {stroke-dashoffset: 75; transform: rotate(135deg)}
+  100% {stroke-dashoffset: 280; transform: rotate(450deg)}
+}

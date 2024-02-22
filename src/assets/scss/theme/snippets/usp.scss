@@ -1,0 +1,40 @@
+@use '../../mixins'as *;
+.usp {
+  text-align: center;
+  &__title {
+    text-transform: uppercase;
+    margin-bottom: rem(4);
+  }
+  &__icon {
+    text-align: center;
+    width: rem(32);
+    height: rem(32);
+    border-radius: 100%;
+    background: var(--color-brand-primary-50);
+    padding: rem(24);
+    margin: 0 auto var(--element-spacing) auto;
+    transform: scale(1);
+    transition: transform var(--duration-default) ease-in-out;
+  }
+  &__content {
+    line-height: rem(20);
+    @include mqmin($bp-md) {
+      line-height: rem(28);
+    }
+  }
+  &__link {
+    text-decoration: none;
+    transition: all var(--duration-default) ease-in-out;
+    display: block;
+    [fill="currentColor"] {
+      transition: all var(--duration-default) ease-in-out;
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      .usp__icon {
+        transform: scale(1.2);
+      }
+    }
+  }
+}

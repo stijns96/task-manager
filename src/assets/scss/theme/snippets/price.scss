@@ -1,0 +1,62 @@
+@use '../../mixins' as *;
+
+.price {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  @include mqmin($bp-md) {
+    margin-bottom: 0;
+  }
+  &--end {
+    justify-content: flex-end;
+  }
+
+  &--sale {
+    color: var(--color-brand-primary);
+  }
+
+  &--compare {
+    color: var(--color-brand-text-50);
+  }
+  &__compare,
+  &__regular {
+    .price-item {
+      &--regular {
+        @include font-weight('regular');
+      }
+    }
+  }
+  &__sale {
+    display: flex;
+    flex-direction: row;
+    .price-item {
+      &--regular {
+        color: var(--color-brand-text-50);
+      }
+      &--sale {
+        color: var(--color-brand-primary);
+        .color-scheme--primary & {
+          color: var(--color-white);
+        }
+      }
+    }
+  }
+  dl {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+  }
+  dd {
+    margin: 0;
+    &.price__compare {
+      margin-left: rem(8);
+    }
+  }
+  &.price--unavailable {
+    visibility: hidden;
+  }
+  .price__last:last-of-type {
+    margin: 0;
+  }
+}

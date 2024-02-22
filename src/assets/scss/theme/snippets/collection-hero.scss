@@ -1,0 +1,101 @@
+@use '../../mixins' as *;
+
+.collection-hero-wrapper {
+  padding: 0;
+  margin-top: rem(16);
+  margin-bottom: rem(16);
+  @include mqmin($bp-md) {
+    margin-top: rem(24);
+    margin-bottom: rem(24);
+  }
+}
+
+.collection-hero {
+  &__view {
+    flex-basis: 25%;
+    @include mqmin($bp-md) {
+      display: none;
+    }
+    .collection-view-icon {
+      display: block;
+      height: rem(24);
+      opacity: .25;
+      margin-right: 6px;
+      color: var(--color-brand-text);
+
+      &--active {
+        opacity: 1;
+      }
+    }
+  }
+  &__text-wrapper {
+    flex-basis: 50%;
+    @include mqmin($bp-md) {
+      flex-basis: 66.666667%;
+    }
+    @include mqmin($bp-lg) {
+      flex-basis: 75%;
+    }
+  }
+  &__title {
+    font-size: rem(28);
+    line-height: rem(32);
+    text-align: center;
+    @include mqmin($bp-md) {
+      font-size: rem(40);
+      line-height: rem(48);
+      text-align: left;
+    }
+  }
+  &__description {
+    margin-top: 1em;
+  }
+  &__image-container {
+    @include mqmax($bp-md) {
+      height: 20rem;
+      margin-top: var(--element-spacing);
+    }
+    @include mqmin($bp-md) {
+      align-self: stretch;
+      flex: 1 0 50%;
+      margin-left: 3rem;
+      min-height: 20rem;
+    }
+  }
+  &__filters {
+    flex-basis: 25%;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    @include mqmin($bp-md) {
+      flex-basis: 33.333333%;
+    }
+    @include mqmin($bp-lg) {
+      flex-basis: 25%;
+    }
+  }
+  &.has-description {
+    .collection-hero {
+      &__inner {
+        flex-wrap: wrap;
+      }
+      &__text-wrapper {
+        @include mqmax($bp-md) {
+          order: -1;
+          flex-basis: 100%;
+          padding-bottom: 1rem;
+        }
+        .container-heading {
+          margin-top: 0;
+        }
+      }
+      &__view,
+      &__filters {
+        @include mqmax($bp-md) {
+          flex-basis: 50%;
+        }
+      }
+    }
+  }
+}
+

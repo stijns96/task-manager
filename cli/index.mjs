@@ -8,6 +8,7 @@ import Spinnies from "spinnies";
 import { compileTailwind } from "./helpers/compile-tailwind.mjs";
 import { compileScss } from "./helpers/compile-scss.mjs";
 import { minimizeJs } from "./helpers/minimize-js.mjs";
+import { bundleJs } from "./helpers/bundle-js.mjs";
 
 // Other
 import { watch } from "chokidar";
@@ -74,14 +75,15 @@ class Cli {
     this.scssFiles.forEach((path) => compileScss(path, this.spinners));
 
     // Minimize JS
-    this.jsFiles.forEach((path) => minimizeJs(path, this.spinners));
+    bundleJs(this.jsFiles, this.spinners);
+    // this.jsFiles.forEach((path) => minimizeJs(path, this.spinners));
 
     this.buildEnd(startTime);
   }
 
   buildStart() {
     // Start timer and spinner
-    this.spinners.add("build-start", {
+    this.spinners.add("build", {
       text: `Building...`,
     });
     return process.hrtime();
@@ -92,14 +94,10 @@ class Cli {
     const endTime = process.hrtime(startTime);
     endTime[1] = Math.floor(endTime[1] / 1000000);
 
-    this.spinners.add("build-end");
-
-    ["build-start", "build-end"].forEach((name) => {
-      this.spinners.succeed(name, {
-        text: `Build ${chalk.green("complete")} in ${chalk.blue(
-          `${endTime}s`
-        )}`,
-      });
+    this.spinners.succeed('build', {
+      text: `Build ${chalk.green("complete")} in ${chalk.blue(
+        `${endTime}s`
+      )}`,
     });
   }
 
@@ -152,28 +150,39 @@ class Cli {
     this.spinners.add("js-watcher", {
       text: "Warming up JS watchers",
     });
+    exec(`pnpm run watch:js`, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+        return;
+      }
+      console.log(stdout);
+    });
 
-    watch(this.srcJs, this.watchOptions)
-      // On error
-      .on("error", (error) =>
-        this.spinners.fail("js-watcher", { text: `Watcher error: ${error}` })
-      )
+    // watch(this.srcJs, this.watchOptions)
+    //   // On error
+    //   .on("error", (error) =>
+    //     this.spinners.fail("js-watcher", { text: `Watcher error: ${error}` })
+    //   )
 
-      // On ready
-      .on("ready", () =>
-        this.spinners.succeed("js-watcher", { text: "JS watcher is ready" })
-      )
+    //   // On ready
+    //   .on("ready", () =>
+    //     this.spinners.succeed("js-watcher", { text: "JS watcher is ready" })
+    //   )
 
-      // On add
-      .on("add", (path) => chalk.blue(`File ${path} has been added`))
+    //   // On add
+    //   .on("add", (path) => chalk.blue(`File ${path} has been added`))
 
-      // On change
-      .on("change", (path) =>
-        minimizeJs(path.replaceAll("\\", "/"), this.spinners)
-      )
+    //   // On change
+    //   .on("change", (path) =>
+    //     minimizeJs(path.replaceAll("\\", "/"), this.spinners)
+    //   )
 
-      // On remove
-      .on("unlink", (path) => chalk.blue(`File ${path} has been removed`));
+    //   // On remove
+    //   .on("unlink", (path) => chalk.blue(`File ${path} has been removed`));
   }
 }
 

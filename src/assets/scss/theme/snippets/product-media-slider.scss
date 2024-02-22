@@ -1,0 +1,108 @@
+@use '../../mixins' as *;
+
+// Product media
+.product-media-slider {
+  position: relative;
+  overflow: hidden;
+
+  &__slider {
+    position: relative;
+    .swiper-button-next {
+      right: 5%;
+    }
+    .swiper-button-prev {
+      left: 5%;
+    }
+  }
+
+  &__thumbnails-slider {
+    position: relative;
+    &__inner {
+      position: relative;
+      width: auto;
+      max-width: rem(264);
+      margin: 0 auto;
+      padding: 0 rem(40);
+      height: 60px;
+      @include mqmin($bp-lg) {
+        max-width: rem(344);
+        padding: 0 rem(56);
+        height: 80px;
+      }
+    }
+    .swiper-button-next {
+      right: rem(0);
+      @include mqmin($bp-lg) {
+        right: rem(8);
+      }
+    }
+    .swiper-button-prev {
+      left: rem(0);
+      @include mqmin($bp-lg) {
+        right: rem(8);
+      }
+    }
+    .swiper-slide {
+      position: relative;
+      cursor: pointer;
+      width: rem(60);
+      box-sizing: border-box;
+      border: var(--button-border) solid var(--color-brand-primary-15);
+      @include mqmin($bp-lg) {
+        width: rem(80);
+      }
+    }
+    .swiper-slide:hover,
+    .swiper-slide:active,
+    .swiper-slide:focus,
+    .swiper-slide-thumb-active {
+      border: var(--button-border) solid var(--color-brand-primary);
+    }
+  }
+
+  &__item {
+    display: block;
+    position: relative;
+    .icon-zoom {
+      position: absolute;
+      right: rem(8);
+      top: rem(8);
+      pointer-events: none;
+    }
+  }
+
+  &__item--model {
+    width: 100%;
+    padding-bottom: 100%;
+    position: relative;
+    model-viewer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+
+  &__item--video {
+    width: 100%;
+    padding-bottom: 56.25%;
+    position: relative;
+    video {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__item--external-video {
+    width: 100%;
+    padding-bottom: 56.25%;
+    position: relative;
+    iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+}

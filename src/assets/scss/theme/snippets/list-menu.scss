@@ -1,0 +1,15 @@
+@use '../../mixins' as *;
+
+.list-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  &--inline {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+  }
+}

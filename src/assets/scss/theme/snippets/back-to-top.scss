@@ -1,0 +1,21 @@
+@use '../../mixins' as *;
+
+.back-to-top-wrapper {
+  display: flex;
+  margin-top: rem(56);
+  margin-bottom: rem(56);
+  @include mqmin($bp-lg) {
+    margin-top: rem(68);
+    margin-bottom: rem(68);
+  }
+}
+
+.back-to-top {
+  margin: 0 auto;
+  .icon {
+    width: rem(20);
+    height: rem(20);
+    transform: rotate(-90deg);
+    margin-left: rem(8);
+  }
+}

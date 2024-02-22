@@ -1,0 +1,37 @@
+@use '../../mixins' as *;
+
+/* Addresses */
+.addresses {
+  [aria-expanded="false"] ~ div[id] {
+    display: none;
+  }
+  [aria-expanded="true"] ~ div[id] {
+    display: block;
+  }
+  label[for="AddressCountryNew"],
+  label[for="AddressProvinceNew"] {
+    display: block;
+  }
+  &__edit-form,
+  &__add-form {
+    margin-top: var(--element-spacing);
+  }
+}
+.address {
+  padding-top: rem(32);
+  padding-bottom: rem(32);
+  margin-bottom: rem(24);
+  position: relative;
+  .address__default {
+    position: absolute;
+    top: 0;
+    background-color: var(--color-brand-accent);
+    color: var(--color-brand-text-on-accent);
+    display: inline-block;
+    padding: rem(4) rem(12);
+    pointer-events: none;
+    overflow-wrap: break-word;
+    font-size: rem(12);
+    line-height: rem(20);
+  }
+}
