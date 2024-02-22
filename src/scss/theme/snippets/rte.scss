@@ -1,0 +1,81 @@
+@use '../../mixins' as *;
+
+.rte {
+  p,
+  cite,
+  blockquote,
+  ul,
+  ol,
+  figure,
+  table,
+  dl,
+  q,
+  form,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--site-center-narrow);
+  }
+  div {
+    margin-top: var(--element-spacing);
+    &:first-child {
+      margin-top: 0;
+    }
+    + h2 {
+      margin-top: var(--element-spacing);
+    }
+  }
+  iframe {
+    max-width: 100%;
+    margin: auto;
+    display: block;
+  }
+  table {
+    table-layout: fixed;
+  }
+  img {
+    height: auto;
+    max-width: 100%;
+    margin-top: calc(var(--element-spacing) * 2);
+    margin-bottom: calc(var(--element-spacing) * 2);
+    vertical-align: bottom;
+    @include mqmin($bp-md) {
+      margin-top: calc(var(--element-spacing) * 2.5);
+      margin-bottom: calc(var(--element-spacing) * 2.5);
+    }
+  }
+  a {
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+    text-decoration-thickness: 0.1rem;
+    transition: text-decoration-thickness var(--duration-short) ease;
+    &:hover {
+      color: var(--color-brand-primary-dark);
+      text-decoration-thickness: 0.2rem;
+    }
+  }
+  blockquote {
+    color: var(--color-brand-primary);
+    font-style: italic;
+    box-sizing: border-box;
+    margin-top: calc(var(--element-spacing) * 3);
+    margin-bottom: calc(var(--element-spacing) * 3);
+    @include mqmin($bp-md) {
+      margin-top: calc(var(--element-spacing) * 3.5);
+      margin-bottom: calc(var(--element-spacing) * 3.5);
+    }
+    cite {
+      display: block;
+    }
+  }
+  p {
+    font-size: rem(16);
+    line-height: rem(28);
+  }
+}

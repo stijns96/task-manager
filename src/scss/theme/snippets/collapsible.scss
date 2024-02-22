@@ -1,0 +1,45 @@
+@use '../../mixins' as *;
+
+// collapsible functionality
+.collapsible {
+  [data-collapsible-trigger] {
+    .js & {
+      cursor: pointer;
+      .collapsible-trigger-icon {
+        transform: rotate(0deg);
+        margin-left: rem(12);
+        transition: transform 0.3s ease-out;
+      }
+    }
+  }
+  [data-collapsible-group] {
+    // If group is open show target
+    &.collapsible-is-open {
+      > [data-collapsible-target] {
+        display: block;
+      }
+      // Rotate icon
+      .collapsible-trigger-icon {
+        transform: rotate(-180deg);
+      }
+    }
+  }
+  // Hide anything inside the collapsible target only when javascript is active
+  [data-collapsible-target] {
+    .js & {
+      display: none;
+    }
+  }
+  &--rte {
+    margin-bottom: calc(var(--element-spacing) * 2);
+    [data-collapsible-group] {
+      margin-bottom: 1px;
+    }
+    [data-collapsible-trigger] {
+      justify-content: space-between;
+    }
+    [data-collapsible-target] {
+      padding: 1rem;
+    }
+  }
+}

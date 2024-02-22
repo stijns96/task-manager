@@ -1,0 +1,204 @@
+/** 
+
+Normal form elements should be marked up as follows:
+
+<div class="field">
+  <label class="field__label" for="example-1">
+    Example 1
+  </label>
+  <input name="customer[password]" placeholder="Example 1" class="field__input" id="example-1">
+</div>
+
+Form elements with validation:
+Native no js browser css state is used to check input states. 
+Set the field input element attribute to required and add icons in the example structure below.
+
+capture icons
+  echo '<div class="field__icons">'
+  render 'global-icon', icon: 'checkmark', icon_size: 'sm'
+  render 'global-icon', icon: 'cross', icon_size: 'sm'
+  echo '</div>'
+endcapture
+
+<div class="field">
+  <label class="field__label" for="example-1">
+    Example 2
+  </label>
+  <input name="customer[password]" placeholder="Example 2" class="field__input" id="example-2" required>
+  {{- icons -}}
+  {%- if form.errors contains 'password' -%}
+    <span id="RegisterForm-password-error" class="field__message field__message--error">
+      {{ form.errors.translated_fields['password'] | capitalize }} {{ form.errors.messages['password'] }}.
+    </span>
+  {%- endif -%}
+</div>
+
+*/
+
+@use '../../mixins' as *;
+
+.form {
+  &__actions {
+    margin-top: rem(32);
+  }
+}
+
+// Field component 
+.field {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  @include element-spacing();
+  // .field__label
+  &__label {
+    display: block;
+    margin-bottom: rem(8);
+    font-size: rem(14);
+    line-height: rem(20);
+    @include font-weight('bold');
+    color: var(--color-brand-text);
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+  // .field__input, .field__select, .field__text-area
+  &__input,
+  &__select,
+  &__text-area {
+    appearance: none;
+    box-sizing: border-box;
+    display: block;
+    background-color: var(--color-brand-primary-15);
+    border: none;
+    padding: rem(10) 1rem;
+    border-radius: 0;
+    @include font-weight('regular');
+    font-size: rem(12);
+    line-height: rem(20);
+    color: var(--color-brand-text);
+    width: 100%;
+    transition: all var(--duration-short) linear;
+    &:focus,
+    &:focus-visible {
+      color: var(--color-brand-text);
+      border-color: var(--color-brand-primary-50);
+      background-color: var(--color-brand-primary-50);
+      outline: none;
+    }
+    &::placeholder {
+      color: var(--color-brand-text-50);
+    }
+    &:invalid:not(:placeholder-shown),
+    &[aria-invalid="true"]:invalid {
+      box-shadow: inset 2px 2px 0 var(--color-brand-negative), inset -2px -2px 0 var(--color-brand-negative);
+      ~ .field__icons .icon-cross {
+        display: block;
+        [fill="currentColor"]  {
+          fill: var(--color-brand-negative);
+        }
+      }
+      ~ .field__message--error {
+        display: block;
+      }
+    }
+    &:active(:not(:disabled)),
+    &:focus(:not(:disabled)),
+    &:focus-visible(:not(:disabled)) {
+      outline: none;
+      background-color: var(--color-brand-primary-50);
+    }
+    &:valid[required],
+    &:invalid:not(:placeholder-shown) {
+      padding-right: rem(56); // preserve space for icons
+    }
+    &:valid[required] {
+      ~ .field__icons .icon-checkmark {
+        display: block;
+      }
+      ~ .field__message {
+        display: none;
+      }
+    }
+    &:disabled[required] {
+      opacity: 0.32;
+      cursor: default;
+      ~ .field__message,
+      ~ .field__label {
+        opacity: 0.32;
+      }
+    }
+    ~ .field__icons .icon {
+      display: none;
+      position: absolute;
+      top: rem(-30);
+      right: rem(20);
+    }
+  }
+  // .field__input, .field__select
+  &__input,
+  &__select {
+    &:-webkit-autofill {
+      box-shadow: 0 0 0px 1000px var(--color-brand-primary-15) inset;
+    }
+  }
+  .select {
+    position: relative;
+  }
+  // .field__select
+  &__select {
+    cursor: pointer;
+    + .icon {
+      position: absolute;
+      top: 50%;
+      right: rem(16);
+      transform-origin: 50% 0;
+      transform: translateY(-50%);
+      &.icon-caret {
+        transform: rotate(90deg) translateY(-50%);
+      }
+    }
+  }
+  // .field__select-icon
+  &__select-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: rem(20);
+  }
+  &__input::-webkit-search-cancel-button,
+  input::-webkit-search-cancel-button {
+    display: none;
+  }
+  // .field__text-area
+  &__text-area {
+    padding: rem(24);
+    min-height: rem(160);
+    resize: none;
+    &--resize-vertical {
+      resize: vertical;
+    }
+  }
+  // .field__message
+  &__message {
+    display: block;
+    font-size: rem(14);
+    line-height: rem(22);
+    flex: none;
+    margin-top: rem(8);
+    width: 100%;
+    &--error {
+      display: none;
+      color: var(--color-brand-negative);
+    }
+  }
+  // .field__icons
+  &__icons {
+    position: relative;
+  }
+}
+
+input[type='checkbox'] {
+  display: inline-block;
+  width: auto;
+  margin-right: 0.5rem;
+}

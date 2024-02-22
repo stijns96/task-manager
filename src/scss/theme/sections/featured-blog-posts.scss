@@ -1,0 +1,12 @@
+@use '../../mixins' as *;
+
+.featured-blog-posts {
+  &__wrapper:not(.swiper-wrapper) {
+    .article-card {
+      margin-bottom: 2rem;
+      @include mqmin($bp-md) {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

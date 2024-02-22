@@ -1,0 +1,47 @@
+@use '../../mixins' as *;
+
+// Account overview
+.account {
+  &__header {
+    font-size: rem(14);
+    line-height: rem(18);
+    letter-spacing: rem(1);
+  }
+  &__orders,
+  &__customer-info {
+    h2,
+    h2:first-child {
+      margin-bottom: rem(16);
+      @include mqmin($bp-md) {
+        margin-bottom: rem(24);
+      }
+    }
+    p + .button {
+      @include mqmin($bp-md) {
+        margin-top: rem(16);
+      }
+    }
+    
+  }
+  &__customer-info {
+    .button ~ .button {
+      margin-top: 1rem;
+    }
+  }
+  &__orders {
+    @include mqmax($bp-lg) {
+      margin-top: var(--container-spacing-md);
+      margin-bottom: var(--container-spacing-md);
+    }
+  }
+}
+
+// Order page
+.order {
+  @include mqmax($bp-lg) {
+    margin-top: var(--container-spacing-md);
+  }
+  &__shipping-info {
+    margin-top: var(--container-spacing-md);
+  }
+}

@@ -1,0 +1,210 @@
+@use '../../mixins'as *;
+
+.menu-drawer {
+  visibility: hidden;
+  overflow-x: hidden;
+  position: fixed;
+  z-index: var(--z-index-popover);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--color-brand-background);
+  color: var(--color-brand-text);
+  width: 100%;
+  @include mqmin($bp-xs) {
+    max-width: rem(360);
+  }
+  transform: translateX(-100%);
+  transition: all var(--duration-short) ease-in-out;
+  display: block;
+  .menu-drawer-is-open & {
+    transform: translateX(0%);
+    visibility: visible;
+    @include mqmin($bp-header) {
+      display: none;
+    }
+    & + .menu-drawer-overlay {
+      opacity: 1;
+      visibility: visible;
+      @include mqmin($bp-header) {
+        display: none;
+      }
+    }
+  }
+  // .menu-drawer__header
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  // .menu-drawer__header
+  &__header {
+    padding: rem(12) rem(16);
+    .menu-drawer__toggle-button {
+      padding: rem(12);
+    }
+  }
+  // .menu-drawer__content
+  &__content {
+    box-sizing: border-box;
+    position: relative;
+    flex: 1;
+  }
+  // .menu-drawer__list
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    &--level-1 {
+      padding: rem(32) 0;
+    }
+    &--level-2 {
+      padding: rem(0) 0 rem(32) 0;
+    }
+    &--level-3 {
+      padding: rem(0) 0 rem(32) 0;
+    }
+  }
+  // .menu-drawer__item
+  &__item {
+    &--level-1 {
+      &.menu-drawer__item--is-open {
+        .menu-drawer__submenu--level-1 {
+          .js & {
+            transform: translateX(0);
+            visibility: visible;
+          }
+        }
+      }
+    }
+    &--level-2 {
+      &.menu-drawer__item--is-open {
+        .menu-drawer__submenu--level-2 {
+          .js & {
+            transform: translateX(0);
+            visibility: visible;
+          }
+        }
+      }
+    }
+    &--with-spacer {
+      margin-top: rem(32);
+    }
+  }
+  // .menu-drawer__link
+  &__link {
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: rem(14) rem(72) rem(14) rem(48);
+    @include font-weight('bold');
+    font-size: rem(14);
+    line-height: rem(20);
+    text-decoration: none;
+    color: inherit;
+    text-align: left;
+    word-break: break-word;
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
+    &--active {
+      color: var(--color-brand-primary);
+    }
+    &--with-icon {
+      display: flex;
+      align-items: center;
+      .icon {
+        margin-right: rem(8);
+      }
+    }
+    // Icon used for the submenu toggle
+    .icon-caret {
+      position: absolute;
+      right: rem(48);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+  // .menu-drawer__toggle-button
+  &__toggle-button {
+    appearance: none;
+    cursor: pointer;
+    display: block;
+    border: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    background-color: transparent;
+  }
+  // .menu-drawer__back-button
+  &__back-button {
+    box-sizing: border-box;
+    appearance: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin: 0;
+    padding: rem(16) rem(24);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    @include font-weight('bold');
+    font-size: rem(12);
+    line-height: rem(16);
+    text-decoration: none;
+    color: var(--color-brand-primary);
+    .icon {
+      transform: rotate(180deg);
+      margin-right: rem(8);
+    }
+  }
+  // Hover & focus states for all buttons or links
+  &__link,
+  &__toggle-button,
+  &__back-button {
+    &:hover,
+    &:focus {
+      color: var(--color-brand-primary);
+    }
+  }
+  // .menu-drawer__submenu
+  &__submenu {
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    visibility: hidden;
+    display: block;
+    transform: translateX(100%);
+    background-color: var(--color-brand-background);
+    transition: all var(--duration-default) ease-out;
+    .menu-drawer__submenu .menu-drawer__submenu {
+      overflow-y: auto;
+    }
+  }
+}
+
+.menu-drawer-overlay {
+  cursor: pointer;
+  display: block;
+  background-color: rgba(0,0,0,0.4);
+  position: fixed;
+  z-index: var(--z-index-offcanvas-backdrop);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: all var(--duration-short) ease-in-out;
+}

@@ -1,0 +1,102 @@
+@use '../../mixins' as *;
+
+.product-card {
+  position: relative;
+  .product__badge,
+  .product__badges .product__badge {
+    @include mqmin($bp-md) {
+      padding: rem(10) rem(20);
+      font-size: rem(14);
+      line-height: rem(20);
+    }
+  }
+  &--alt {
+    .product__badge,
+    .product__badges .product__badge {
+      padding: rem(10) rem(20);
+      font-size: rem(14);
+      line-height: rem(20);
+    }
+  }
+  &__image {
+    position: relative;
+    &:hover,
+    &:focus {
+      .product-card__image--secondary {
+        display: block;
+        opacity: 1;
+      }
+    }
+    .img {
+      margin: 0;
+    }
+    &--secondary {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      opacity: 0;
+      transition: opacity var(--duration-default) ease-in-out;
+    }
+  }
+  &__information {
+    display: block;
+    padding-top: rem(8);
+    text-align: center;
+    font-size: rem(14);
+    line-height: rem(20);
+    .price {
+      justify-content: center;
+    }
+    &--alt {
+      padding-top: rem(12);
+      text-align: left;
+    }
+  }
+  &__information-text {
+    display: block;
+  }
+  &__price {
+    font-size: rem(14);
+    line-height: rem(20);
+    text-align: center;
+    &--alt {
+      margin-top: rem(8);
+      text-align: left;
+    }
+  }
+  .swiper-button-prev {
+    left: .5rem;
+  }
+  .swiper-button-next {
+    right: .5rem;
+  }
+  // hover effect for view=1 on large screens when there is no swiper
+  @include mqmin($bp-md) {
+    .swiper-container:not(.swiper-container-initialized) {
+      &:hover,
+      &:focus {
+        .swiper-slide {
+          &:first-child {
+            opacity: 0;
+          }
+          &:nth-child(2) {
+            opacity: 1;
+          }
+        }
+      }
+      .swiper-slide {
+        transition: opacity var(--duration-default) ease-in-out;
+        &:nth-child(2) {
+          margin-left: -100%;
+          opacity: 0;
+        }
+        &:nth-child(n+3) {
+          display: none;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@use '../../mixins' as *;
+
+.authentication-header {
+  margin-top: rem(56);
+  margin-bottom: rem(56);
+  font-size: rem(14);
+  line-height: rem(18);
+  letter-spacing: rem(1);
+  h1 {
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+  }
+  .link {
+    color: var(--color-brand-text);
+    &:hover {
+      color: var(--color-brand-primary);
+    }
+  }
+  h1,
+  .link {
+    margin: 0 rem(20);
+  }
+}
