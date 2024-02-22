@@ -63,7 +63,7 @@ export async function compileScss(path, spinners) {
 
     if (!result.css) throw new Error("No CSS to compile.");
 
-    const layer = `@layer ${layerName} {
+    const layer = `@layer ${layerName ? layerName : ""} {
       ${result.css}
     }\n`;
 
