@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node ./cli/index.mjs --dev",
-    "build": "node ./cli/index.mjs",
+    "dev": "node ./cli2/index.mjs --dev",
+    "build": "node ./cli2/index.mjs",
     "build:js": "rollup --c",
     "watch:js": "rollup --c --w",
-    "clean:assets": "node ./cli/index.mjs --clean"
+    "clean:assets": "node ./cli2/index.mjs --clean"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "autoprefixer": "^10.4.17",
     "chalk": "^5.3.0",
     "chokidar": "^3.6.0",
+    "dedent": "^1.5.1",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "ora": "^8.0.1",
