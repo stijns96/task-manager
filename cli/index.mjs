@@ -83,7 +83,7 @@ class Cli {
 
   buildStart() {
     // Start timer and spinner
-    this.spinners.add("build-start", {
+    this.spinners.add("build", {
       text: `Building...`,
     });
     return process.hrtime();
@@ -94,14 +94,10 @@ class Cli {
     const endTime = process.hrtime(startTime);
     endTime[1] = Math.floor(endTime[1] / 1000000);
 
-    this.spinners.add("build-end");
-
-    ["build-start", "build-end"].forEach((name) => {
-      this.spinners.succeed(name, {
-        text: `Build ${chalk.green("complete")} in ${chalk.blue(
-          `${endTime}s`
-        )}`,
-      });
+    this.spinners.succeed('build', {
+      text: `Build ${chalk.green("complete")} in ${chalk.blue(
+        `${endTime}s`
+      )}`,
     });
   }
 

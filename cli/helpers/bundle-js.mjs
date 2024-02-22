@@ -1,3 +1,5 @@
+import path from "path";
+
 import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 
@@ -5,14 +7,12 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import chalk from "chalk";
 
 async function bundleJs(paths, spinners) {
-  // spinners.add(path, {
-  //   text: `Compiling ${path}...`,
-  // });
 
   const inputOptions = {
     input: paths,
+    perf: true,
     plugins: [nodeResolve()],
-    treeshake: false,
+    treeshake: false
   };
 
   // see below for details on these options
@@ -20,36 +20,46 @@ async function bundleJs(paths, spinners) {
   let buildFailed = false;
 
   try {
+    spinners.add('bundle-js', {
+      text: `Start bundling`,
+    });
+
     bundle = await rollup(inputOptions);
 
-    await generateOutputs(bundle);
+    await generateOutputs(bundle, spinners);
 
-    // spinners.succeed(path, {
-    //   text: `${chalk.green("Compiled")} ${chalk.blueBright(
-    //     path
-    //   )} ➔  ${chalk.blue(to)}`,
-    // });
+    spinners.succeed('bundle-js', {
+      text: `Bundling complete!`,
+    });
+
   } catch (error) {
     buildFailed = true;
-    // do some error reporting
-    console.error(error);
+    
+    console.log(process.cwd());
+    console.log('frame', error.frame);
+    console.log('id', error.id);
+    console.log('loc', error.loc);
+    console.log('message', error.message);
 
-    // spinners.fail(path, {
-    //   text: `${chalk.red("Error")} compiling ${chalk.blueBright(path)}: ${
-    //     error.message
-    //   }`,
-    // });
+    // [!] RollupError: Expected unicode escape
+    // src/js/collapsible.js (8:5)
+
+    spinners.fail('bundle-js', {
+      text: `${chalk.red(`Bundle error: ${error.message}`)}
+  ${error.loc.file.replace(process.cwd(), "")} (${error.loc.line}:${error.loc.column})
+  ${chalk.dim(error.frame)}
+  ${chalk.dim(error.stack)}
+      `,
+    });
   }
 
   if (bundle) {
     // closes the bundle
     await bundle.close();
   }
-
-  // process.exit(buildFailed ? 1 : 0);
 }
 
-async function generateOutputs(bundle) {
+async function generateOutputs(bundle, spinners) {
   // you can create multiple outputs from the same input to generate e.g.
   // different formats like CommonJS and ESM
   const outputOptionsList = [

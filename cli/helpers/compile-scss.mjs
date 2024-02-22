@@ -18,8 +18,8 @@ import tailwind from "tailwindcss";
  * @param {String} path - Path to SCSS file
  */
 export async function compileScss(path, spinners) {
-  spinners.add(path, {
-    text: `Compiling ${path}...`,
+  spinners.add('compile-css', {
+    text: `Compiling CSS`,
   });
 
   try {
@@ -69,16 +69,10 @@ export async function compileScss(path, spinners) {
 
     fse.outputFileSync(to, layer);
 
-    spinners.succeed(path, {
-      text: `${chalk.green("Compiled")} ${chalk.blueBright(
-        path
-      )} ➔  ${chalk.blue(to)}`,
+    spinners.succeed('compile-css', {
+      text: `${chalk.green("CSS compiled")}`,
     });
   } catch (error) {
-    spinners.fail(path, {
-      text: `${chalk.red("Error")} compiling ${chalk.blueBright(path)}: ${
-        error.message
-      }`,
-    });
+    // console.log(chalk.red(`Failed to compile ${path}`), error);
   }
 }
