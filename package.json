@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node ./cli2/index.mjs --dev",
-    "build": "node ./cli2/index.mjs",
-    "build:js": "rollup --c",
-    "watch:js": "rollup --c --w",
-    "clean:assets": "node ./cli2/index.mjs --clean"
+    "dev": "node ./cli/index.mjs --dev",
+    "build": "node ./cli/index.mjs --build=assets",
+    "build:js": "node ./cli/index.mjs --build=js",
+    "build:css": "node ./cli/index.mjs --build=css",
+    "clean": "node ./cli/index.mjs --clean=assets",
+    "clean:js": "node ./cli/index.mjs --clean=js",
+    "clean:css": "node ./cli/index.mjs --clean=css"
   },
   "keywords": [],
   "author": "",
