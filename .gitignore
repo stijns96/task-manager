@@ -1,5 +1,5 @@
 # Ignore all assets
-theme/assets
+theme/assets/*
 
 # Ignore all user settings
 theme/config/settings_data.json
