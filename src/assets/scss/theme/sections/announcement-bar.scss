@@ -1,8 +1,8 @@
-@use '../../../mixins' as *;
+@use "../../mixins" as *;
 
 #shopify-section-announcement-bar {
   position: relative;
-  z-index: calc( var(--z-index-sticky) + 1);
+  z-index: calc(var(--z-index-sticky) + 1);
   .header-search-is-open & {
     z-index: 1;
   }
@@ -20,7 +20,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    @include font-weight('bold');
+    @include font-weight("bold");
     padding: rem(10) rem(10);
     position: relative;
     overflow: hidden;
