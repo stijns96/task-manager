@@ -3,6 +3,7 @@ import CompileScss from "../methods/compile-scss.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
+import chalk from "chalk";
 
 export default class Build {
   constructor() {
@@ -13,32 +14,37 @@ export default class Build {
   }
 
   async run({ type = "assets" }) {
+    const startTime = process.hrtime();
+    this.spinners.add("build", {
+      text: `Building ${type}...`,
+    });
+
     await this[type]();
+
+    const endTime = process.hrtime(startTime);
+    const time = endTime[0] + endTime[1] / 1e9;
+
+    this.spinners.succeed("build", {
+      text: `Building ${type} ${chalk.green("completed")} (${chalk.blue(
+        `${time.toFixed(2)}s`
+      )})`,
+    });
   }
 
   async assets() {
     // Build css and js right here at the same time
-    this.js();
-    this.css();
+    await this.js();
+    await this.css();
   }
 
   async js() {
-    const startTime = this.startSpinner("bundle-js", "Bundling JS...");
     const bundleJs = new BundleJs();
-
     await bundleJs.run();
-
-    this.endSpinner("bundle-js", "Bundling JS completed", startTime);
   }
 
   async css() {
-    const startTime = this.startSpinner("compile-scss", "Compiling SCSS...");
-
     const compileScss = new CompileScss();
-
     await compileScss.run();
-
-    this.endSpinner("compile-scss", "Compiling SCSS completed", startTime);
   }
 
   startSpinner(name, text) {
@@ -46,14 +52,5 @@ export default class Build {
       text,
     });
     return process.hrtime();
-  }
-
-  endSpinner(name, text, startTime) {
-    const endTime = process.hrtime(startTime);
-    const time = endTime[0] + endTime[1] / 1e9;
-
-    this.spinners.succeed(name, {
-      text: `${text} (${time.toFixed(2)}s)`,
-    });
   }
 }
