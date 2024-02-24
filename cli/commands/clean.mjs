@@ -1,10 +1,10 @@
 // File system packages
 import fse from "fs-extra";
+import { globSync } from "glob";
 
 // Terminal packages
 import Spinnies from "spinnies";
-
-import { globSync } from "glob";
+import chalk from "chalk";
 
 export default class Clean {
   constructor() {
@@ -18,7 +18,7 @@ export default class Clean {
 
   async run({ type = "assets" }) {
     const startTime = process.hrtime();
-    this.spinners.add("clean-assets", {
+    this.spinners.add("clean", {
       text: `Cleaning ${type}...`,
     });
 
@@ -27,8 +27,10 @@ export default class Clean {
     const endTime = process.hrtime(startTime);
     const time = endTime[0] + endTime[1] / 1e9;
 
-    this.spinners.succeed("clean-assets", {
-      text: `Cleaning ${type} completed (${time.toFixed(2)}s)`,
+    this.spinners.succeed("clean", {
+      text: `Cleaning ${type} ${chalk.green("completed")} (${chalk.blue(
+        `${time.toFixed(2)}s`
+      )})`,
     });
   }
 
