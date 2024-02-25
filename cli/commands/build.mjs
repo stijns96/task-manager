@@ -69,7 +69,7 @@ export default class Build {
   }
 
   async js() {
-    const bundleJs = new BundleJs({ files: this.jsFiles });
+    const bundleJs = new BundleJs({ input: this.jsFiles });
     try {
       await bundleJs.run();
     } catch (error) {
@@ -78,7 +78,7 @@ export default class Build {
   }
 
   async css() {
-    const compileScss = new CompileScss({ files: this.scssFiles });
+    const compileScss = new CompileScss({ input: this.scssFiles });
     try {
       await compileScss.run();
     } catch (error) {

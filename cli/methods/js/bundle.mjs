@@ -2,14 +2,14 @@ import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default class BundleJs {
-  constructor({ files } = { files: [""] }) {
-    this.files = files;
+  constructor({ input } = { input: [""] || "" }) {
+    this.input = input;
 
     this.bundle;
 
     this.rollup = {
       inputOptions: {
-        input: this.files,
+        input: this.input,
         perf: true,
         plugins: [nodeResolve()],
         treeshake: false,

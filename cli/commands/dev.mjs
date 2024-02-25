@@ -1,21 +1,22 @@
-import WatchJs from "../methods/js/watch.mjs";
-import CompileScss from "../methods/scss/compile.mjs";
+import Watch from "../methods/watch.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Dev {
-  constructor(
-    { files } = {
-      files: {
-        js: [""],
-        scss: [""],
-      },
-    }
-  ) {
-    this.jsFiles = files.js;
-    this.scssFiles = files.scss;
+  constructor({ js, scss } = { js: {}, scss: {} }) {
+    // JavaScript files
+    this.js = {
+      glob: js.glob,
+      files: js.files,
+    };
+
+    // SCSS files
+    this.scss = {
+      glob: scss.glob,
+      files: scss.files,
+    };
 
     // Errors
     this.errors = [];
@@ -33,7 +34,7 @@ export default class Dev {
       text: `Starting development...`,
     });
 
-    this.watch();
+    await this.watch();
 
     const endTime = process.hrtime(startTime);
     const time = endTime[0] + endTime[1] / 1e9;
@@ -43,27 +44,26 @@ export default class Dev {
     });
   }
 
-  async assets() {
-    // Build css and js right here at the same time
-    await this.js();
-    await this.css();
+  async watch() {
+    // load parallel
+    await Promise.all([this.watchJs(), this.watchScss()]);
   }
 
-  watch() {
-    this.WatchJs();
+  async watchJs() {
+    const watchJs = new Watch({
+      type: "js",
+      glob: this.js.glob,
+      spinners: this.spinners,
+    });
+    await watchJs.run();
   }
 
-  async WatchJs() {
-    const watchJs = new WatchJs({ files: this.jsFiles });
-    watchJs.run();
-  }
-
-  async css() {
-    const compileScss = new CompileScss({ files: this.scssFiles });
-    try {
-      await compileScss.run();
-    } catch (error) {
-      throw error;
-    }
+  async watchScss() {
+    const watchScss = new Watch({
+      type: "scss",
+      glob: this.scss.glob,
+      spinners: this.spinners,
+    });
+    await watchScss.run();
   }
 }

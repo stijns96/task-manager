@@ -24,14 +24,32 @@ class CLI {
       posix: true,
     };
 
-    this.jsFiles = globSync("src/assets/js/**/*.js", this.globOptions);
-    this.scssFiles = globSync("src/assets/scss/**/*.scss", {
+    // Src
+    this.src = {
+      glob: "src/assets",
+    };
+
+    // JavaScript
+    this.jsGlob = `${this.src.glob}/js/**/*.js`;
+    this.jsFiles = globSync(this.jsGlob, this.globOptions);
+    this.js = {
+      glob: this.jsGlob,
+      files: this.jsFiles,
+    };
+
+    // SCSS
+    this.scssGlob = `${this.src.glob}/scss/**/*.scss`;
+    this.scssFiles = globSync(this.scssGlob, {
       ignore: [
-        "src/assets/scss/{partials,tailwind}/**",
-        "src/assets/scss/**/_*.scss",
+        `${this.src.glob}/scss/{partials,tailwind}/**`,
+        `${this.src.glob}/scss/**/_*.scss`,
       ],
       ...this.globOptions,
     });
+    this.scss = {
+      glob: this.scssGlob,
+      files: this.scssFiles,
+    };
 
     this.run();
   }
@@ -47,10 +65,8 @@ class CLI {
    */
   async dev() {
     const dev = new Dev({
-      files: {
-        js: this.jsFiles,
-        scss: this.scssFiles,
-      },
+      js: this.js,
+      scss: this.scss,
     });
 
     await dev.run();

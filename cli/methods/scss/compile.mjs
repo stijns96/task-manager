@@ -11,8 +11,8 @@ import postcssPresetEnv from "postcss-preset-env";
 import tailwind from "tailwindcss";
 
 export default class CompileScss {
-  constructor({ files } = { files: [""] }) {
-    this.files = files;
+  constructor({ input } = { input: [""] || "" }) {
+    this.input = typeof input === "string" ? [input] : input;
   }
 
   async run() {
@@ -20,7 +20,7 @@ export default class CompileScss {
   }
 
   async compileFile() {
-    for (const file of this.files) {
+    for (const file of this.input) {
       try {
         const { css } = await sass.compileAsync(file);
         await postcss([
