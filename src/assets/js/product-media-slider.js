@@ -1,8 +1,15 @@
-import { Swiper } from 'swiper';
-import { A11y, Autoplay, Navigation, Pagination, Scrollbar, Thumbs } from 'swiper/modules';
-import { Fancybox } from '@fancyapps/ui';
+import Swiper from "swiper";
+import {
+  A11y,
+  Autoplay,
+  Navigation,
+  Pagination,
+  Scrollbar,
+  Thumbs,
+} from "swiper/modules";
+import { Fancybox } from "@fancyapps/ui";
 
-if (!customElements.get('product-media-slider')) {
+if (!customElements.get("product-media-slider")) {
   class ProductMediaSlider extends HTMLElement {
     constructor() {
       super();
@@ -18,7 +25,7 @@ if (!customElements.get('product-media-slider')) {
       };
 
       // Listen for variant change and go to slide
-      document.addEventListener('variant-change', this.reducer.slideToVariant);
+      document.addEventListener("variant-change", this.reducer.slideToVariant);
     }
 
     /*
@@ -31,26 +38,31 @@ if (!customElements.get('product-media-slider')) {
       }
 
       // Get Thumbnails slider element & Set swiper options
-      this.swiperThumbs = this.querySelector('[data-product-media-thumbnails-slider]');
+      this.swiperThumbs = this.querySelector(
+        "[data-product-media-thumbnails-slider]"
+      );
       this.swiperThumbsOptions = {
         modules: [A11y, Autoplay, Navigation, Pagination, Scrollbar],
         threshold: 10,
         spaceBetween: 8,
-        direction: 'horizontal',
-        slidesPerView: 'auto',
+        direction: "horizontal",
+        slidesPerView: "auto",
         watchSlidesProgress: true,
         navigation: {
-          nextEl: '.swiper-button-thumbnails-next',
-          prevEl: '.swiper-button-thumbnails-prev',
+          nextEl: ".swiper-button-thumbnails-next",
+          prevEl: ".swiper-button-thumbnails-prev",
         },
       };
 
       // Create Thumbnails slider
-      this.swiperThumbsInstance = new Swiper(this.swiperThumbs, this.swiperThumbsOptions);
+      this.swiperThumbsInstance = new Swiper(
+        this.swiperThumbs,
+        this.swiperThumbsOptions
+      );
 
       // Rebuild Swiper in design mode after delay
       if (Shopify.designMode && this.swiperThumbsInstance) {
-        window.addEventListener('shopify:section:load', () => {
+        window.addEventListener("shopify:section:load", () => {
           setTimeout(() => {
             this.swiperThumbsInstance.update();
           }, 300);
@@ -63,12 +75,12 @@ if (!customElements.get('product-media-slider')) {
      */
     mainSlider() {
       // Check if Swiper exists
-      if (typeof Swiper == 'undefined') {
+      if (typeof Swiper == "undefined") {
         return false;
       }
 
       // Get swiper element
-      this.swiperMain = this.querySelector('[data-product-media-slider]');
+      this.swiperMain = this.querySelector("[data-product-media-slider]");
 
       // Get thumb options
       let thumbOptions;
@@ -77,14 +89,16 @@ if (!customElements.get('product-media-slider')) {
           modules: [A11y, Autoplay, Navigation, Pagination, Scrollbar, Thumbs],
           thumbs: {
             swiper: this.swiperThumbsInstance,
-            slideThumbActiveClass: 'swiper-slide-active',
+            slideThumbActiveClass: "swiper-slide-active",
           },
         };
       }
 
       // Get initial slide and swiper index
       let initialSlideIndex = 0;
-      const initalVariant = parseInt(this.swiperMain.dataset.productMediaSlider);
+      const initalVariant = parseInt(
+        this.swiperMain.dataset.productMediaSlider
+      );
 
       if (initalVariant) {
         const initialSlide = this.matchVariantIdWithSlide(initalVariant);
@@ -94,21 +108,24 @@ if (!customElements.get('product-media-slider')) {
       // Swiper options
       this.swiperMainOptions = {
         threshold: 10,
-        direction: 'horizontal',
+        direction: "horizontal",
         initialSlide: initialSlideIndex,
         navigation: {
-          prevEl: this.querySelector('.product-media-slider__button-prev'),
-          nextEl: this.querySelector('.product-media-slider__button-next'),
+          prevEl: this.querySelector(".product-media-slider__button-prev"),
+          nextEl: this.querySelector(".product-media-slider__button-next"),
         },
         ...thumbOptions,
       };
 
       // Create Main slider
-      this.swiperMainInstance = new Swiper(this.swiperMain, this.swiperMainOptions);
+      this.swiperMainInstance = new Swiper(
+        this.swiperMain,
+        this.swiperMainOptions
+      );
 
       // Rebuid Swiper in design mode
       if (Shopify.designMode && this.swiperMainInstance) {
-        window.addEventListener('shopify:section:load', () => {
+        window.addEventListener("shopify:section:load", () => {
           this.swiperMainInstance.update();
         });
       }
@@ -119,14 +136,14 @@ if (!customElements.get('product-media-slider')) {
      */
     fancybox() {
       // Check if Fancybox exists
-      if (typeof Swiper == 'undefined') {
+      if (typeof Swiper == "undefined") {
         return false;
       }
 
-      Fancybox.bind('[data-fancybox]', {
+      Fancybox.bind("[data-fancybox]", {
         animated: false,
         showClass: false,
-        mainClass: 'image-zoom',
+        mainClass: "image-zoom",
       });
     }
 
@@ -137,7 +154,7 @@ if (!customElements.get('product-media-slider')) {
     slideToVariant(e) {
       if (e?.detail?.variant?.id) {
         const slideIndex = this.matchVariantIdWithSlide(e.detail.variant.id);
-        if (typeof slideIndex == 'number') {
+        if (typeof slideIndex == "number") {
           this.goToSlide(slideIndex);
         }
       }
@@ -153,7 +170,9 @@ if (!customElements.get('product-media-slider')) {
       }
 
       // Get slides
-      const slides = this.swiperMain.querySelectorAll('[data-product-variant-image]');
+      const slides = this.swiperMain.querySelectorAll(
+        "[data-product-variant-image]"
+      );
 
       // Match id with slides id's
       const slide = [...slides].find((slide) => {
@@ -180,12 +199,16 @@ if (!customElements.get('product-media-slider')) {
      * @param slide {node} / {int}: slide node / index
      */
     goToSlide(slide) {
-      if ((typeof slide != 'number' && typeof slide != 'object') || !this.swiperMainInstance) {
+      if (
+        (typeof slide != "number" && typeof slide != "object") ||
+        !this.swiperMainInstance
+      ) {
         return false;
       }
 
       // Get index, transform node to slide index or string to int
-      const index = typeof slide == 'number' ? parseInt(slide) : getNodeIndex(slide);
+      const index =
+        typeof slide == "number" ? parseInt(slide) : getNodeIndex(slide);
 
       // go to slide
       this.swiperMainInstance.slideTo(index);
@@ -194,5 +217,5 @@ if (!customElements.get('product-media-slider')) {
 
   window.ProductMediaSlider = ProductMediaSlider;
 
-  customElements.define('product-media-slider', ProductMediaSlider);
+  customElements.define("product-media-slider", ProductMediaSlider);
 }

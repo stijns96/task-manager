@@ -1,6 +1,5 @@
 // File system packages
 import fse from "fs-extra";
-import { globSync } from "glob";
 
 // Compilers
 import * as sass from "sass";
@@ -12,14 +11,8 @@ import postcssPresetEnv from "postcss-preset-env";
 import tailwind from "tailwindcss";
 
 export default class CompileScss {
-  constructor() {
-    this.files = globSync("src/assets/scss/**/*.scss", {
-      ignore: [
-        "src/assets/scss/{partials,tailwind}/**",
-        "src/assets/scss/**/_*.scss",
-      ],
-      posix: true,
-    });
+  constructor({ files } = { files: [""] }) {
+    this.files = files;
   }
 
   async run() {
@@ -42,14 +35,31 @@ export default class CompileScss {
               .replace("src/assets/scss/", "")
               .replace("theme/", "")
               .replace(".scss", ".css");
+
+            // Replace slashes with dashes
             const outputFileName = fileName.replace(/\//g, "-");
-            const outputFile = `theme/assets/${outputFileName}`;
+
+            // Array of folder names
+            const folderNames = file.split("/");
+            // Make sure that the actual file name can not be the layer name
+            folderNames.pop();
+
+            // Rename snippets to components.
+            // If the layer name is empty, use an empty string
+            const layerName =
+              folderNames[4] === "snippets"
+                ? "components"
+                : folderNames[4] || "";
+
+            // Create the layer
+            const layer = `@layer ${layerName} {\n${css}\n}`;
 
             // Write the file
-            fse.outputFile(outputFile, css);
+            fse.outputFile(`theme/assets/${outputFileName}`, layer);
           });
       } catch (error) {
-        console.error(error); // Handle errors appropriately
+        // console.error(error); // Handle errors appropriately
+        throw error;
       }
     }
   }

@@ -1,34 +1,65 @@
-import BundleJs from "../methods/bundle-js.mjs";
-import CompileScss from "../methods/compile-scss.mjs";
+import BundleJs from "../methods/js/bundle.mjs";
+import CompileScss from "../methods/scss/compile.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Build {
-  constructor() {
+  constructor(
+    { type, files } = {
+      type: "assets",
+      files: {
+        js: [""],
+        scss: [""],
+      },
+    }
+  ) {
+    this.type = type;
+    this.jsFiles = files.js;
+    this.scssFiles = files.scss;
+
+    // Errors
+    this.errors = [];
+
+    // Spinner
     this.spinners = new Spinnies({
       succeedColor: "white",
       failColor: "white",
     });
   }
 
-  async run({ type = "assets" }) {
+  async run() {
     const startTime = process.hrtime();
     this.spinners.add("build", {
-      text: `Building ${type}...`,
+      text: `Building ${this.type}...`,
     });
 
-    await this[type]();
+    try {
+      await this[this.type]();
+    } catch (error) {
+      this.errors.push(error);
+    } finally {
+      const endTime = process.hrtime(startTime);
+      const time = endTime[0] + endTime[1] / 1e9;
+      let spinnerText;
 
-    const endTime = process.hrtime(startTime);
-    const time = endTime[0] + endTime[1] / 1e9;
+      if (this.errors.length > 0) {
+        spinnerText = `Building ${this.type} ${chalk.red(
+          "failed"
+        )} with ${chalk.red("errors")} (${chalk.blue(`${time.toFixed(2)}s`)})`;
+      } else {
+        spinnerText = `Building ${this.type} ${chalk.green(
+          "completed"
+        )} (${chalk.blue(`${time.toFixed(2)}s`)})`;
+      }
 
-    this.spinners.succeed("build", {
-      text: `Building ${type} ${chalk.green("completed")} (${chalk.blue(
-        `${time.toFixed(2)}s`
-      )})`,
-    });
+      this.spinners.succeed("build", {
+        text: spinnerText,
+      });
+
+      this.errors?.forEach((error) => console.error(error));
+    }
   }
 
   async assets() {
@@ -38,19 +69,20 @@ export default class Build {
   }
 
   async js() {
-    const bundleJs = new BundleJs();
-    await bundleJs.run();
+    const bundleJs = new BundleJs({ files: this.jsFiles });
+    try {
+      await bundleJs.run();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async css() {
-    const compileScss = new CompileScss();
-    await compileScss.run();
-  }
-
-  startSpinner(name, text) {
-    this.spinners.add(name, {
-      text,
-    });
-    return process.hrtime();
+    const compileScss = new CompileScss({ files: this.scssFiles });
+    try {
+      await compileScss.run();
+    } catch (error) {
+      throw error;
+    }
   }
 }

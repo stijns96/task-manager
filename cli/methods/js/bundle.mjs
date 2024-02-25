@@ -1,13 +1,11 @@
 import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 
-import { globSync } from "glob";
-
 export default class BundleJs {
-  constructor() {
-    this.files = globSync("src/assets/js/**/*.js", {
-      posix: true,
-    });
+  constructor({ files } = { files: [""] }) {
+    this.files = files;
+
+    this.bundle;
 
     this.rollup = {
       inputOptions: {
@@ -25,26 +23,21 @@ export default class BundleJs {
   }
 
   async run() {
-    await this.buildJs();
+    await this.build();
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }
 
-  async buildJs() {
-    // see below for details on these options
-    let bundle;
-    let buildFailed = false;
-
+  async build() {
     try {
-      bundle = await rollup(this.rollup.inputOptions);
-
-      await this.generateOutputs(bundle);
+      this.bundle = await rollup(this.rollup.inputOptions);
+      await this.generateOutputs(this.bundle);
     } catch (error) {
-      buildFailed = true;
+      throw error;
     }
 
-    if (bundle) {
+    if (this.bundle) {
       // closes the bundle
-      await bundle.close();
+      await this.bundle.close();
     }
   }
 

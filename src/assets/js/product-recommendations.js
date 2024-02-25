@@ -1,12 +1,18 @@
-import { Swiper } from 'swiper';
-import { A11y, Autoplay, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import Swiper from "swiper";
+import {
+  A11y,
+  Autoplay,
+  Navigation,
+  Pagination,
+  Scrollbar,
+} from "swiper/modules";
 
-if (!customElements.get('product-recommendations')) {
+if (!customElements.get("product-recommendations")) {
   class ProductRecommendations extends HTMLElement {
     constructor() {
       super();
 
-      this.swiperElement = this.querySelector('[data-swiper]');
+      this.swiperElement = this.querySelector("[data-swiper]");
 
       this.swiperOptions = {
         modules: [A11y, Autoplay, Navigation, Pagination, Scrollbar],
@@ -39,10 +45,10 @@ if (!customElements.get('product-recommendations')) {
           .then((response) => response.text())
           .then((text) => {
             const html = new DOMParser()
-              .parseFromString(text, 'text/html')
-              .querySelector('[data-recommended-products]').innerHTML;
+              .parseFromString(text, "text/html")
+              .querySelector("[data-recommended-products]").innerHTML;
 
-            this.querySelector('[data-recommended-products]').innerHTML = html;
+            this.querySelector("[data-recommended-products]").innerHTML = html;
 
             this.swiperInstance.update();
             if (this.swiperOptions.navigation) {
@@ -67,5 +73,5 @@ if (!customElements.get('product-recommendations')) {
 
   window.ProductRecommendations = ProductRecommendations;
 
-  customElements.define('product-recommendations', ProductRecommendations);
+  customElements.define("product-recommendations", ProductRecommendations);
 }

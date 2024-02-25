@@ -1,8 +1,8 @@
-import { Swiper } from 'swiper';
-import { A11y, Navigation } from 'swiper/modules';
-import { Fancybox } from '@fancyapps/ui';
+import Swiper from "swiper";
+import { A11y, Navigation } from "swiper/modules";
+import { Fancybox } from "@fancyapps/ui";
 
-if (!customElements.get('product-media')) {
+if (!customElements.get("product-media")) {
   class ProductMedia extends HTMLElement {
     constructor() {
       super();
@@ -12,18 +12,18 @@ if (!customElements.get('product-media')) {
 
     swiper() {
       // Check if Swiper exists
-      if (typeof Swiper == 'undefined') {
+      if (typeof Swiper == "undefined") {
         return false;
       }
 
       // Get swiper element
-      this.swiperElement = this.querySelector('[data-product-media-swiper]');
+      this.swiperElement = this.querySelector("[data-product-media-swiper]");
 
       // Swiper options
       this.swiperOptions = {
         modules: [A11y, Navigation],
         threshold: 10,
-        direction: 'horizontal',
+        direction: "horizontal",
       };
 
       // Init swiper
@@ -31,7 +31,7 @@ if (!customElements.get('product-media')) {
 
       // Rebuid Swiper in design mode
       if (Shopify.designMode && this.swiperInstance) {
-        window.addEventListener('shopify:section:load', () => {
+        window.addEventListener("shopify:section:load", () => {
           this.swiperInstance.update();
         });
       }
@@ -42,19 +42,19 @@ if (!customElements.get('product-media')) {
      */
     fancybox() {
       // Check if Fancybox exists
-      if (typeof Fancybox == 'undefined') {
+      if (typeof Fancybox == "undefined") {
         return false;
       }
 
-      Fancybox.bind('[data-fancybox]', {
+      Fancybox.bind("[data-fancybox]", {
         animated: false,
         showClass: false,
-        mainClass: 'image-zoom',
+        mainClass: "image-zoom",
       });
     }
   }
 
   window.ProductMedia = ProductMedia;
 
-  customElements.define('product-media', ProductMedia);
+  customElements.define("product-media", ProductMedia);
 }

@@ -62,14 +62,20 @@
 </swiper-slider>
  */
 
-import { Swiper } from 'swiper';
-import { A11y, Navigation, Pagination, Scrollbar, Autoplay } from 'swiper/modules';
+import Swiper from "swiper";
+import {
+  A11y,
+  Navigation,
+  Pagination,
+  Scrollbar,
+  Autoplay,
+} from "swiper/modules";
 
-if (!customElements.get('swiper-slider')) {
+if (!customElements.get("swiper-slider")) {
   class SwiperSlider extends HTMLElement {
     constructor() {
       super();
-      this.swiper = this.querySelector('[data-swiper]');
+      this.swiper = this.querySelector("[data-swiper]");
 
       // Stop when the swiper is not found
       if (!this.swiper) {
@@ -101,7 +107,7 @@ if (!customElements.get('swiper-slider')) {
        */
       if (Shopify.designMode) {
         // Update the swiper when the section event is triggerd
-        window.addEventListener('shopify:section:load', (event) => {
+        window.addEventListener("shopify:section:load", (event) => {
           this.swiperInstance.update();
           if (this.swiperOptions.navigation) {
             this.swiperInstance.navigation.init();
@@ -110,7 +116,7 @@ if (!customElements.get('swiper-slider')) {
         });
 
         // When on block select go to the slide in front-end
-        window.addEventListener('shopify:block:select', (event) => {
+        window.addEventListener("shopify:block:select", (event) => {
           this.swiperInstance.update();
           if (this.swiperOptions.navigation) {
             this.swiperInstance.navigation.init();
@@ -120,7 +126,7 @@ if (!customElements.get('swiper-slider')) {
         });
 
         // When on block deselect go to the slide in front-end
-        window.addEventListener('shopify:block:deselect', (event) => {
+        window.addEventListener("shopify:block:deselect", (event) => {
           this.swiperInstance.update();
           if (this.swiperOptions.navigation) {
             this.swiperInstance.navigation.init();
@@ -137,23 +143,24 @@ if (!customElements.get('swiper-slider')) {
      */
     handleBlockSelect(event) {
       // Check if the slide index is set
-      if (!('swiperSlideIndex' in event.target.dataset)) {
+      if (!("swiperSlideIndex" in event.target.dataset)) {
         return;
       }
 
       // Set the slide index based on loop settings or not
-      let swipeToSlideIndex = parseInt(event.target.dataset.swiperSlideIndex) - 1;
+      let swipeToSlideIndex =
+        parseInt(event.target.dataset.swiperSlideIndex) - 1;
       if (this.swiperOptions.loop) {
         swipeToSlideIndex = parseInt(event.target.dataset.swiperSlideIndex) + 1;
       }
 
       // Slide to slide based on the data attribute from the target
-      const sliderToUpdate = event.target.closest('[data-swiper]');
+      const sliderToUpdate = event.target.closest("[data-swiper]");
       sliderToUpdate.swiper.slideTo(swipeToSlideIndex, 1000);
     }
   }
 
   window.SwiperSlider = SwiperSlider;
 
-  customElements.define('swiper-slider', SwiperSlider);
+  customElements.define("swiper-slider", SwiperSlider);
 }

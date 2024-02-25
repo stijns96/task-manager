@@ -1,13 +1,13 @@
-if (!customElements.get('cart-icon-bubble')) {
+if (!customElements.get("cart-icon-bubble")) {
   class CartIconBubble extends HTMLElement {
     constructor() {
       super();
 
       this.toggleButton = this.querySelector('[aria-controls="cart-drawer"]');
-      this.cartDrawer = document.querySelector('cart-drawer');
+      this.cartDrawer = document.querySelector("cart-drawer");
 
       if (this.cartDrawer) {
-        this.toggleButton.addEventListener('click', this.toggle.bind(this));
+        this.toggleButton.addEventListener("click", this.toggle.bind(this));
       }
     }
 
@@ -21,5 +21,5 @@ if (!customElements.get('cart-icon-bubble')) {
     }
   }
   window.CartIconBubble = CartIconBubble;
-  customElements.define('cart-icon-bubble', CartIconBubble);
+  customElements.define("cart-icon-bubble", CartIconBubble);
 }

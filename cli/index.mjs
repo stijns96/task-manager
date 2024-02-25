@@ -2,6 +2,9 @@ import Dev from "./commands/dev.mjs";
 import Build from "./commands/build.mjs";
 import Clean from "./commands/clean.mjs";
 
+// File system packages
+import { globSync } from "glob";
+
 // Terminal packages
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
@@ -16,6 +19,24 @@ class CLI {
       clean: this.argv.clean || false,
     };
 
+    // Glob
+    this.globOptions = {
+      posix: true,
+    };
+
+    this.jsFiles = globSync("src/assets/js/**/*.js", this.globOptions);
+    this.scssFiles = globSync("src/assets/scss/**/*.scss", {
+      ignore: [
+        "src/assets/scss/{partials,tailwind}/**",
+        "src/assets/scss/**/_*.scss",
+      ],
+      ...this.globOptions,
+    });
+
+    this.run();
+  }
+
+  run() {
     this.args.dev && this.dev();
     this.args.build && this.build({ type: this.args.build });
     this.args.clean && this.clean({ type: this.args.clean });
@@ -25,7 +46,12 @@ class CLI {
    * Run development
    */
   async dev() {
-    const dev = new Dev();
+    const dev = new Dev({
+      files: {
+        js: this.jsFiles,
+        scss: this.scssFiles,
+      },
+    });
 
     await dev.run();
   }
@@ -34,21 +60,27 @@ class CLI {
    * Build assets
    */
   async build({ type } = {}) {
-    const build = new Build();
+    const build = new Build({
+      type,
+      files: {
+        js: this.jsFiles,
+        scss: this.scssFiles,
+      },
+    });
 
     // Clean assets before building
     await this.clean({ type });
 
-    await build.run({ type });
+    await build.run();
   }
 
   /**
    * Clean assets
    */
   async clean({ type } = {}) {
-    const clean = new Clean();
+    const clean = new Clean({ type });
 
-    await clean.run({ type });
+    await clean.run();
   }
 }
 

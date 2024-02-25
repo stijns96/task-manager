@@ -1,5 +1,5 @@
-import { Swiper } from 'swiper';
-import { A11y, Navigation } from 'swiper/modules';
+import Swiper from "swiper";
+import { A11y, Navigation } from "swiper/modules";
 
 class ProductCard extends HTMLElement {
   constructor() {
@@ -10,13 +10,13 @@ class ProductCard extends HTMLElement {
   init() {
     this.createSwiper();
     this.handleSwiperButtons();
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       this.handleSwiperButtons();
     });
   }
 
   createSwiper() {
-    this.swiperElement = this.querySelector('[data-product-card-swiper]');
+    this.swiperElement = this.querySelector("[data-product-card-swiper]");
 
     this.swiperOptions = {
       modules: [A11y, Navigation],
@@ -25,11 +25,11 @@ class ProductCard extends HTMLElement {
       loop: false,
       autoplay: false,
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
       },
       slidesPerView: 1,
-      direction: 'horizontal',
+      direction: "horizontal",
       breakpoints: {
         768: { allowTouchMove: false },
       },
@@ -52,15 +52,19 @@ class ProductCard extends HTMLElement {
   handleSwiperButtons() {
     let windowWidth = window.innerWidth;
     if (windowWidth < 768) {
-      this.querySelectorAll('button').forEach((button) => button.classList.remove('hidden'));
+      this.querySelectorAll("button").forEach((button) =>
+        button.classList.remove("hidden")
+      );
     } else if (this.swiperInstance) {
-      this.querySelectorAll('button').forEach((button) => button.classList.add('hidden'));
+      this.querySelectorAll("button").forEach((button) =>
+        button.classList.add("hidden")
+      );
     }
   }
 }
 
-if (!customElements.get('product-card-swiper')) {
+if (!customElements.get("product-card-swiper")) {
   window.ProductCard = ProductCard;
 
-  customElements.define('product-card-swiper', ProductCard);
+  customElements.define("product-card-swiper", ProductCard);
 }
