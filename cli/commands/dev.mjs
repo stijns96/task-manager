@@ -18,12 +18,9 @@ export default class Dev {
       files: scss.files,
     };
 
-    // Errors
-    this.errors = [];
-
     // Spinner
     this.spinners = new Spinnies({
-      succeedColor: "white",
+      succeedColor: "gray",
       failColor: "white",
     });
   }
