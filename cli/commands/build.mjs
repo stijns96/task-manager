@@ -45,8 +45,8 @@ export default class Build {
       let spinnerText;
 
       if (this.errors.length > 0) {
-        spinnerText = `Building ${this.type} ${chalk.red(
-          "failed"
+        spinnerText = `Building ${this.type} ${chalk.green(
+          "completed"
         )} with ${chalk.red("errors")} (${chalk.blue(`${time.toFixed(2)}s`)})`;
       } else {
         spinnerText = `Building ${this.type} ${chalk.green(
