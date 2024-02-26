@@ -2,7 +2,6 @@ import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 import chalk from "chalk";
-import dedent from "dedent";
 
 
 export default class BundleJs {
@@ -43,11 +42,7 @@ export default class BundleJs {
       const position = `${loc.line}:${loc.column}`;
       const file = loc.file.replace(process.cwd(), "");
 
-      this.errors.push(
-        dedent(`${errorMessages} in ${chalk.blue.underline(`${file}:${position}`)}\n
-        ${frame}\n
-        ${chalk.dim(stack)}
-        `));
+      this.errors.push(`${errorMessages} in ${chalk.blue.underline(`${file}:${position}`)}\n\n${frame}\n\n${chalk.dim(stack)}`);
 
 
     } finally {
@@ -63,9 +58,6 @@ export default class BundleJs {
 
   async generateOutputs(bundle) {
     for (const outputOptions of this.rollup.outputOptionsList) {
-      // generate output specific code in-memory
-      // you can call this function multiple times on the same bundle object
-      // replace bundle.generate with bundle.write to directly write to disk
       await bundle.write(outputOptions);
     }
   }

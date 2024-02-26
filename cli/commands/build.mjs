@@ -16,45 +16,47 @@ export default class Build {
     }
   ) {
     this.type = type;
-    this.jsFiles = files.js;
-    this.scssFiles = files.scss;
-
-    // Errors
-    this.errors = [];
+    this.js = {
+      files: files.js,
+      errors: [],
+    };
+    this.scss = {
+      files: files.scss,
+      errors: [],
+    };
 
     // Spinner
     this.spinners = new Spinnies({
-      succeedColor: "white",
+      succeedColor: "gray",
       failColor: "white",
     });
   }
 
   async run() {
-    const startTime = process.hrtime();
-    this.spinners.add("build", {
-      text: `Building ${this.type}...`,
-    });
 
     try {
-      await this[this.type]();
+      switch (this.type) {
+        case "assets":
+          await this.buildAssets();
+          break;
+        case "js":
+          await this.buildJs();
+          break;
+        case "css":
+          await this.buildCss();
+          break;
+        default:
+          throw new Error(`Build type ${this.type} is not supported`);
+      }
 
     } finally {
-      const endTime = process.hrtime(startTime);
-      const time = endTime[0] + endTime[1] / 1e9;
 
-      const spinnerText = this.errors.length > 0 ?
-        `Building ${this.type} ${chalk.green("completed")} with ${chalk.red(`${this.errors.length} errors`)} (${chalk.blue(`${time.toFixed(2)}s`)})` :
-        `Building ${this.type} ${chalk.green("completed")} (${chalk.blue(`${time.toFixed(2)}s`)})`
-
-      this.spinners.succeed("build", {
-        text: spinnerText,
-      });
-
-      this.errors?.forEach((error, index) => {
+      const errors = [...this.js.errors, ...this.scss.errors];
+      errors?.forEach((error, index) => {
         console.log(`\n${chalk.dim('-').repeat(process.stdout.columns)}\n`);
         console.log(error)
 
-        if (index === this.errors.length - 1) console.log(`\n`);
+        if (index === errors.length - 1) console.log(`\n`);
       });
     }
   }
@@ -62,34 +64,111 @@ export default class Build {
   /**
    * Build assets
    */
-  async assets() {
-    await this.js();
-    await this.css();
+  async buildAssets() {
+    const startTime = this.startSpinner({
+      type: "assets",
+      text: "Building assets...",
+    });
+
+    // Run js and css parallel
+    await Promise.all([this.buildJs(), this.buildCss()]);
+
+    this.endSpinner({
+      type: "assets",
+      startTime,
+      text: "building assets",
+    });
   }
 
   /**
    * Bundle js files
    */
-  async js() {
-    const bundleJs = new BundleJs({ input: this.jsFiles });
+  async buildJs() {
+    const startTime = this.startSpinner({
+      type: "js",
+      text: "Bundling JS files...",
+      indent: 2,
+    });
+
+    const bundleJs = new BundleJs({ input: this.js.files });
 
     try {
       await bundleJs.run();
     } catch (errors) {
-      this.errors = [...this.errors, ...errors];
+      this.js.errors = errors;
     }
+
+    this.endSpinner({
+      type: "js",
+      startTime,
+      text: "bundling js files",
+      errors: this.js.errors,
+    });
   }
 
   /**
    * Compile scss files
    */
-  async css() {
-    const compileScss = new CompileScss({ input: this.scssFiles });
+  async buildCss() {
+    const startTime = this.startSpinner({
+      type: "css",
+      text: "compiling scss files...",
+      indent: 2,
+    });
+
+    const compileScss = new CompileScss({ input: this.scss.files });
 
     try {
       await compileScss.run();
     } catch (errors) {
-      this.errors = [...this.errors, ...errors];
+      this.scss.errors = errors;
+    }
+
+    this.endSpinner({
+      type: "css",
+      startTime,
+      text: 'compiling scss files',
+      errors: this.scss.errors,
+    });
+  }
+
+  /**
+   * Start spinner
+   * @param {string} type - Type of spinner
+   * @param {string} text - Text to display
+   * @param {number} indent - Indentation
+   * @returns {Array} - Start time
+   */
+  startSpinner({ type, text, indent = 0 }) {
+    const startTime = process.hrtime();
+    this.spinners.add(`build-${type}`, {
+      text,
+      indent,
+    });
+
+    return startTime;
+  }
+
+  /**
+   * End spinner
+   * @param {string} type - Type of spinner
+   * @param {Array} startTime - Start time
+   * @param {string} text - Text to display
+   * @param {Array} errors - Errors
+   */
+  endSpinner({ type, startTime, text, errors = [] }) {
+    const endTime = process.hrtime(startTime);
+    const time = endTime[0] + endTime[1] / 1e9;
+    const timeInSeconds = `(${chalk.blue(`${time.toFixed(2)}s`)})`;
+
+    if (errors.length > 0) {
+      this.spinners.fail(`build-${type}`, {
+        text: `${chalk.red("Failed")} ${text} ${timeInSeconds}`,
+      });
+    } else {
+      this.spinners.succeed(`build-${type}`, {
+        text: `${chalk.green("Completed")} ${text} ${timeInSeconds}`,
+      });
     }
   }
 }
