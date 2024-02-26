@@ -15,26 +15,23 @@ export default class Clean {
 
     // Spinner
     this.spinners = new Spinnies({
-      succeedColor: "white",
+      succeedColor: "gray",
       failColor: "white",
     });
   }
 
   async run() {
-    const startTime = process.hrtime();
-    this.spinners.add("clean", {
-      text: `Cleaning ${this.type}...`,
-    });
+    const startTime = this.startSpinner({
+      type: this.type,
+      text: `Cleaning ${this.type}`,
+    })
 
     await this[this.type]();
 
-    const endTime = process.hrtime(startTime);
-    const time = endTime[0] + endTime[1] / 1e9;
-
-    this.spinners.succeed("clean", {
-      text: `Cleaning ${this.type} ${chalk.green("completed")} (${chalk.blue(
-        `${time.toFixed(2)}s`
-      )})`,
+    this.endSpinner({
+      type: this.type,
+      startTime,
+      text: `Cleaning ${this.type}`,
     });
   }
 
@@ -65,5 +62,45 @@ export default class Clean {
 
     // Remove all css files
     files.forEach((file) => fse.removeSync(file));
+  }
+
+  /**
+   * Start spinner
+   * @param {string} type - Type of spinner
+   * @param {string} text - Text to display
+   * @param {number} indent - Indentation
+   * @returns {Array} - Start time
+   */
+  startSpinner({ type, text, indent = 0 }) {
+    const startTime = process.hrtime();
+    this.spinners.add(`build-${type}`, {
+      text,
+      indent,
+    });
+
+    return startTime;
+  }
+
+  /**
+   * End spinner
+   * @param {string} type - Type of spinner
+   * @param {Array} startTime - Start time
+   * @param {string} text - Text to display
+   * @param {Array} errors - Errors
+   */
+  endSpinner({ type, startTime, text, errors = [] }) {
+    const endTime = process.hrtime(startTime);
+    const time = endTime[0] + endTime[1] / 1e9;
+    const timeInSeconds = `(${chalk.blue(`${time.toFixed(2)}s`)})`;
+
+    if (errors.length > 0) {
+      this.spinners.fail(`build-${type}`, {
+        text: `${chalk.red("Failed")} ${text} ${timeInSeconds}`,
+      });
+    } else {
+      this.spinners.succeed(`build-${type}`, {
+        text: `${chalk.green("Completed")} ${text} ${timeInSeconds}`,
+      });
+    }
   }
 }

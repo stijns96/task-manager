@@ -71,7 +71,7 @@ export default class Build {
     });
 
     // Run js and css parallel
-    await Promise.all([this.buildJs(), this.buildCss()]);
+    await Promise.all([this.buildJs({ indent: 2 }), this.buildCss({ indent: 2 })]);
 
     this.endSpinner({
       type: "assets",
@@ -83,11 +83,11 @@ export default class Build {
   /**
    * Bundle js files
    */
-  async buildJs() {
+  async buildJs({ indent } = { indent: 0 }) {
     const startTime = this.startSpinner({
       type: "js",
       text: "Bundling JS files...",
-      indent: 2,
+      indent
     });
 
     const bundleJs = new BundleJs({ input: this.js.files });
@@ -109,11 +109,11 @@ export default class Build {
   /**
    * Compile scss files
    */
-  async buildCss() {
+  async buildCss({ indent } = { indent: 0 }) {
     const startTime = this.startSpinner({
       type: "css",
       text: "compiling scss files...",
-      indent: 2,
+      indent
     });
 
     const compileScss = new CompileScss({ input: this.scss.files });
