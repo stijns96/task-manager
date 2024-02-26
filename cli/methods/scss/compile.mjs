@@ -13,6 +13,8 @@ import tailwind from "tailwindcss";
 export default class CompileScss {
   constructor({ input } = { input: [""] || "" }) {
     this.input = typeof input === "string" ? [input] : input;
+
+    this.errors = [];
   }
 
   async run() {
@@ -58,9 +60,12 @@ export default class CompileScss {
             fse.outputFile(`theme/assets/${outputFileName}`, layer);
           });
       } catch (error) {
-        // console.error(error); // Handle errors appropriately
-        throw error;
+        this.errors.push(error);
       }
+    }
+
+    if (this.errors.length > 0) {
+      throw this.errors;
     }
   }
 }
