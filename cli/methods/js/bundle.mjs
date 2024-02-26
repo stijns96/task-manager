@@ -24,7 +24,6 @@ export default class BundleJs {
 
   async run() {
     await this.build();
-    await new Promise((resolve) => setTimeout(resolve, 1500));
   }
 
   async build() {
