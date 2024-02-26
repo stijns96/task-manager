@@ -38,27 +38,23 @@ export default class Build {
     try {
       await this[this.type]();
     } catch (errors) {
-      this.errors = errors;
+      this.errors = [...this.errors, ...errors];
     } finally {
       const endTime = process.hrtime(startTime);
       const time = endTime[0] + endTime[1] / 1e9;
-      let spinnerText;
 
-      if (this.errors.length > 0) {
-        spinnerText = `Building ${this.type} ${chalk.green(
-          "completed"
-        )} with ${chalk.red("errors")} (${chalk.blue(`${time.toFixed(2)}s`)})\n`;
-      } else {
-        spinnerText = `Building ${this.type} ${chalk.green(
-          "completed"
-        )} (${chalk.blue(`${time.toFixed(2)}s`)})`;
-      }
+      const spinnerText = this.errors.length > 0 ?
+      `Building ${this.type} ${chalk.green("completed")} with ${chalk.red(`${this.errors.length} errors`)} (${chalk.blue(`${time.toFixed(2)}s`)})` :
+      `Building ${this.type} ${chalk.green("completed")} (${chalk.blue(`${time.toFixed(2)}s`)})`
 
       this.spinners.succeed("build", {
         text: spinnerText,
       });
       
-      this.errors?.forEach(error => console.log(error));
+      this.errors?.forEach(error => {
+        console.log(`\n${chalk.dim('-').repeat(process.stdout.columns)}\n`);
+        console.log(error)
+      });
     }
   }
 
