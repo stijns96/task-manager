@@ -26,7 +26,8 @@ class CLI {
 
     // Src
     this.src = {
-      assets: "src/assets",
+      assets: "./src/assets",
+      theme: "./theme",
     };
 
     // JavaScript
@@ -66,6 +67,7 @@ class CLI {
     this.liquid = {
       glob: this.liquidGlob,
       files: this.liquidFiles,
+      output: this.src.theme,
     };
 
     this.run();
@@ -99,7 +101,8 @@ class CLI {
       type,
       js: this.js,
       scss: this.scss,
-      tailwind: this.tailwind
+      tailwind: this.tailwind,
+      liquid: this.liquid,
     });
 
     // Clean assets before building

@@ -1,6 +1,7 @@
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
+import CopyLiquid from "../methods/liquid/copy.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
@@ -8,11 +9,12 @@ import chalk from "chalk";
 
 export default class Build {
   constructor(
-    { type, js, scss, tailwind } = {
+    { type, js, scss, tailwind, liquid } = {
       type: "assets",
       js: {},
       scss: {},
       tailwind: {},
+      liquid: {},
     }
   ) {
     this.type = type;
@@ -27,6 +29,12 @@ export default class Build {
     this.tailwind = {
       input: tailwind.files,
       output: tailwind.output,
+      errors: [],
+    };
+
+    this.liquid = {
+      input: liquid.files,
+      output: liquid.output,
       errors: [],
     };
 
@@ -52,7 +60,8 @@ export default class Build {
           if (!dev) await this.buildTailwind({ dev });
           break;
         case "liquid":
-          await this.buildTailwind({ dev });
+          await this.buildLiquid({ dev });
+          if (dev) await this.buildTailwind({ dev });
           break;
         default:
           throw new Error(`Build type ${this.type} is not supported`);
@@ -83,7 +92,8 @@ export default class Build {
     await Promise.all([
       this.buildJs({ indent: 2 }),
       this.buildCss({ indent: 2 }),
-      this.buildTailwind({ indent: 2 })
+      this.buildTailwind({ indent: 2 }),
+      this.buildLiquid({ indent: 2 }),
     ]);
 
     this.endSpinner({
@@ -180,6 +190,37 @@ export default class Build {
       startTime,
       text: "compiling tailwind files",
       errors: this.tailwind.errors,
+    });
+  }
+
+  /**
+   * Copy liquid files
+   */
+  async buildLiquid({ dev = false, indent = 0 } = {}) {
+    const startTime = this.startSpinner({
+      type: "liquid",
+      text: "Copying liquid files...",
+      indent
+    });
+
+    const copyLiquid = new CopyLiquid({
+      input: this.liquid.input,
+      output: this.liquid.output
+    });
+
+    try {
+      // Clear errors when dev mode is enabled
+      if (dev) this.liquid.errors = [];
+
+      await copyLiquid.run();
+    } catch (errors) {
+      this.liquid.errors = errors;
+    }
+
+    this.endSpinner({
+      type: "liquid",
+      startTime,
+      text: "copying liquid files",
     });
   }
 

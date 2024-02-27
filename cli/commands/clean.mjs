@@ -65,6 +65,17 @@ export default class Clean {
   }
 
   /**
+   * Clean liquid
+   */
+  async liquid() {
+    // Get all liquid files
+    const files = globSync("theme/*.liquid", this.globOptions);
+
+    // Remove all liquid files
+    files.forEach((file) => fse.removeSync(file));
+  }
+
+  /**
    * Start spinner
    * @param {string} type - Type of spinner
    * @param {string} text - Text to display

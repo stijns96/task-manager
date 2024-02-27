@@ -10,6 +10,7 @@ import postcss from "postcss";
 import autoprefixer from "autoprefixer";
 import postcssPresetEnv from "postcss-preset-env";
 import tailwind from "tailwindcss";
+import purgecss from "@fullhuman/postcss-purgecss";
 
 export default class CompileTailwind {
   constructor({ input, output } = { input: [""] || "", output: "" }) {
@@ -30,11 +31,20 @@ export default class CompileTailwind {
         const layerName = input.split("/").pop().replace(".scss", "");
         const { css } = sass.compile(input);
 
-        const result = await postcss([
+        const postcssPlugins = [
           tailwind,
           autoprefixer,
           postcssPresetEnv(),
-        ]).process(css, {
+        ];
+
+        // Add purgecss if layerName is not base
+        if (layerName !== "base") {
+          postcssPlugins.push(purgecss({
+            content: ["./src/**/*.js", "./src/**/*.liquid"],
+          }));
+        }
+
+        const result = await postcss(postcssPlugins).process(css, {
           from: input,
         });
 
