@@ -26,11 +26,11 @@ class CLI {
 
     // Src
     this.src = {
-      glob: "src/assets",
+      assets: "src/assets",
     };
 
     // JavaScript
-    this.jsGlob = `${this.src.glob}/js/**/*.js`;
+    this.jsGlob = `${this.src.assets}/js/**/*.js`;
     this.jsFiles = globSync(this.jsGlob, this.globOptions);
     this.js = {
       glob: this.jsGlob,
@@ -38,17 +38,34 @@ class CLI {
     };
 
     // SCSS
-    this.scssGlob = `${this.src.glob}/scss/**/*.scss`;
+    this.scssGlob = `${this.src.assets}/scss/**/*.scss`;
     this.scssFiles = globSync(this.scssGlob, {
       ignore: [
-        `${this.src.glob}/scss/{partials,tailwind}/**`,
-        `${this.src.glob}/scss/**/_*.scss`,
+        `${this.src.assets}/scss/{partials,tailwind}/**`,
+        `${this.src.assets}/scss/**/_*.scss`,
       ],
       ...this.globOptions,
     });
     this.scss = {
       glob: this.scssGlob,
       files: this.scssFiles,
+    };
+
+    // Tailwind
+    this.tailwindGlob = `${this.src.assets}/scss/tailwind/*.scss`;
+    this.tailwindFiles = globSync(this.tailwindGlob, this.globOptions);
+    this.tailwind = {
+      glob: this.tailwindGlob,
+      files: this.tailwindFiles,
+      output: `${this.src.assets}/scss/tailwind.css`,
+    };
+
+    // Liquid
+    this.liquidGlob = "src/**/*.liquid";
+    this.liquidFiles = globSync(this.liquidGlob, this.globOptions);
+    this.liquid = {
+      glob: this.liquidGlob,
+      files: this.liquidFiles,
     };
 
     this.run();
@@ -67,6 +84,8 @@ class CLI {
     const dev = new Dev({
       js: this.js,
       scss: this.scss,
+      tailwind: this.tailwind,
+      liquid: this.liquid,
     });
 
     await dev.run();
@@ -78,10 +97,9 @@ class CLI {
   async build({ type } = {}) {
     const build = new Build({
       type,
-      files: {
-        js: this.jsFiles,
-        scss: this.scssFiles,
-      },
+      js: this.js,
+      scss: this.scss,
+      tailwind: this.tailwind
     });
 
     // Clean assets before building

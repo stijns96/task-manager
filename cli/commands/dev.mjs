@@ -5,7 +5,7 @@ import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Dev {
-  constructor({ js, scss } = { js: {}, scss: {} }) {
+  constructor({ js, scss, tailwind, liquid } = { js: {}, scss: {}, tailwind: {}, liquid: {} }) {
     // JavaScript files
     this.js = {
       glob: js.glob,
@@ -17,6 +17,20 @@ export default class Dev {
       glob: scss.glob,
       files: scss.files,
     };
+
+    // Tailwind
+    this.tailwind = {
+      input: tailwind.files,
+      output: tailwind.output,
+      errors: [],
+    };
+
+    // Liquid
+    this.liquid = {
+      glob: liquid.glob,
+      files: liquid.files,
+    };
+
 
     // Spinner
     this.spinners = new Spinnies({
@@ -43,24 +57,33 @@ export default class Dev {
 
   async watch() {
     // load parallel
-    await Promise.all([this.watchJs(), this.watchScss()]);
+    await Promise.all([this.watchJs(), this.watchScss(), this.watchLiquid()]);
   }
 
   async watchJs() {
-    const watchJs = new Watch({
+    const watch = new Watch({
       type: "js",
       glob: this.js.glob,
       spinners: this.spinners,
     });
-    await watchJs.run();
+    await watch.run();
   }
 
   async watchScss() {
-    const watchScss = new Watch({
+    const watch = new Watch({
       type: "scss",
       glob: this.scss.glob,
       spinners: this.spinners,
     });
-    await watchScss.run();
+    await watch.run();
+  }
+
+  async watchLiquid() {
+    const watch = new Watch({
+      type: "liquid",
+      glob: this.liquid.glob,
+      spinners: this.spinners,
+    });
+    await watch.run();
   }
 }

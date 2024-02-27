@@ -1,5 +1,6 @@
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
+import CompileTailwind from "../methods/tailwind/compile.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
@@ -7,21 +8,25 @@ import chalk from "chalk";
 
 export default class Build {
   constructor(
-    { type, files } = {
+    { type, js, scss, tailwind } = {
       type: "assets",
-      files: {
-        js: [""],
-        scss: [""],
-      },
+      js: {},
+      scss: {},
+      tailwind: {},
     }
   ) {
     this.type = type;
     this.js = {
-      files: files.js,
+      input: js.files,
       errors: [],
     };
     this.scss = {
-      files: files.scss,
+      input: scss.files,
+      errors: [],
+    };
+    this.tailwind = {
+      input: tailwind.files,
+      output: tailwind.output,
       errors: [],
     };
 
@@ -32,18 +37,22 @@ export default class Build {
     });
   }
 
-  async run() {
+  async run({ type = this.type, dev = false, input } = {}) {
 
     try {
-      switch (this.type) {
+      switch (type) {
         case "assets":
-          await this.buildAssets();
+          await this.buildAssets({ dev, input });
           break;
         case "js":
-          await this.buildJs();
+          await this.buildJs({ dev, input });
           break;
         case "css":
-          await this.buildCss();
+          await this.buildCss({ dev, input });
+          if (!dev) await this.buildTailwind({ dev });
+          break;
+        case "liquid":
+          await this.buildTailwind({ dev });
           break;
         default:
           throw new Error(`Build type ${this.type} is not supported`);
@@ -51,7 +60,7 @@ export default class Build {
 
     } finally {
 
-      const errors = [...this.js.errors, ...this.scss.errors];
+      const errors = [...this.js.errors, ...this.scss.errors, ...this.tailwind.errors];
       errors?.forEach((error, index) => {
         console.log(`\n${chalk.dim('-').repeat(process.stdout.columns)}\n`);
         console.log(error)
@@ -71,7 +80,11 @@ export default class Build {
     });
 
     // Run js and css parallel
-    await Promise.all([this.buildJs({ indent: 2 }), this.buildCss({ indent: 2 })]);
+    await Promise.all([
+      this.buildJs({ indent: 2 }),
+      this.buildCss({ indent: 2 }),
+      this.buildTailwind({ indent: 2 })
+    ]);
 
     this.endSpinner({
       type: "assets",
@@ -83,16 +96,19 @@ export default class Build {
   /**
    * Bundle js files
    */
-  async buildJs({ indent } = { indent: 0 }) {
+  async buildJs({ dev = false, input = this.js.input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "js",
       text: "Bundling JS files...",
       indent
     });
 
-    const bundleJs = new BundleJs({ input: this.js.files });
+    const bundleJs = new BundleJs({ input });
 
     try {
+      // Clear errors when dev mode is enabled
+      if (dev) this.js.errors = [];
+
       await bundleJs.run();
     } catch (errors) {
       this.js.errors = errors;
@@ -109,16 +125,19 @@ export default class Build {
   /**
    * Compile scss files
    */
-  async buildCss({ indent } = { indent: 0 }) {
+  async buildCss({ dev = false, input = this.scss.input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "css",
       text: "compiling scss files...",
       indent
     });
 
-    const compileScss = new CompileScss({ input: this.scss.files });
+    const compileScss = new CompileScss({ input });
 
     try {
+      // Clear errors when dev mode is enabled
+      if (dev) this.scss.errors = [];
+
       await compileScss.run();
     } catch (errors) {
       this.scss.errors = errors;
@@ -129,6 +148,38 @@ export default class Build {
       startTime,
       text: 'compiling scss files',
       errors: this.scss.errors,
+    });
+  }
+
+  /**
+   * Compile tailwind files
+   */
+  async buildTailwind({ dev = false, indent = 0 }) {
+    const startTime = this.startSpinner({
+      type: "tailwind",
+      text: "compiling tailwind files...",
+      indent
+    });
+
+    const compileTailwind = new CompileTailwind({
+      input: this.tailwind.input,
+      output: this.tailwind.output
+    });
+
+    try {
+      // Clear errors when dev mode is enabled
+      if (dev) this.tailwind.errors = [];
+
+      await compileTailwind.run();
+    } catch (errors) {
+      this.tailwind.errors = errors;
+    }
+
+    this.endSpinner({
+      type: "tailwind",
+      startTime,
+      text: "compiling tailwind files",
+      errors: this.tailwind.errors,
     });
   }
 
