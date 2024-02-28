@@ -31,7 +31,13 @@ export default {
   },
   js: {
     glob: {
-      input: `${src.root}/assets/js/**/*.js`
+      input: `${src.root}/assets/js/**/*.js`,
+      options: {
+        ignore: [
+          `${src.root}/assets/js/**/_*.js`,
+        ],
+        ...globOptions
+      }
     },
   },
   scss: {
