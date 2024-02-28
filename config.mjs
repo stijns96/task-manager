@@ -1,5 +1,3 @@
-// Create simple config for my cli
-
 const globOptions = {
   posix: true,
 };
