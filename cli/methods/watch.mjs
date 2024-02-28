@@ -1,23 +1,25 @@
+import config from "../../config.mjs";
+
 import Build from "../commands/build.mjs";
 
 import { watch } from "chokidar";
 import chalk from "chalk";
 
 export default class Watch extends Build {
-  constructor({ type, glob, spinners } = { type: "", glob: "", spinners: {} }) {
+  constructor({
+    type,
+    spinners
+  } = {
+      type: "",
+      spinners: {}
+    }) {
     super();
 
     this.type = type;
-    this.glob = glob;
+    this.glob = config[this.type].glob.input;
     this.spinners = spinners;
 
     this.errors = [];
-
-    this.watchOptions = {
-      // Ignore dotfiles
-      ignored: /(^|[\/\\])\../,
-      persistent: true,
-    };
   }
 
   async run() {
@@ -27,7 +29,7 @@ export default class Watch extends Build {
       indent: 2,
     });
 
-    const watcher = watch(this.glob, this.watchOptions);
+    const watcher = watch(this.glob, config.watch.options);
 
     // Wait for the "ready" event before continuing
     await new Promise((resolve, reject) => {
