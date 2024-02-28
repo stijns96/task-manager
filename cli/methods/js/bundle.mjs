@@ -1,12 +1,15 @@
+import config from "../../../config.mjs";
+
 import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 import chalk from "chalk";
-
+import { globSync } from "glob";
 
 export default class BundleJs {
   constructor({ input } = { input: [""] || "" }) {
-    this.input = input;
+    this.input =
+      input || globSync(config.js.glob.input, config.js.glob.options);
 
     this.bundle;
     this.errors = [];
@@ -20,7 +23,7 @@ export default class BundleJs {
       },
       outputOptionsList: [
         {
-          dir: "theme/assets",
+          dir: config.theme.assetsDir,
         },
       ],
     };
@@ -34,17 +37,18 @@ export default class BundleJs {
     try {
       this.bundle = await rollup(this.rollup.inputOptions);
       await this.generateOutputs(this.bundle);
-
     } catch (error) {
-      const { frame, id, loc, message, stack } = error;
+      const { frame, loc, message, stack } = error;
 
       const errorMessages = `${chalk.red(`Bundle error:`)} ${message}`;
       const position = `${loc.line}:${loc.column}`;
       const file = loc.file.replace(process.cwd(), "");
 
-      this.errors.push(`${errorMessages} in ${chalk.blue.underline(`${file}:${position}`)}\n\n${frame}\n\n${chalk.dim(stack)}`);
-
-
+      this.errors.push(
+        `${errorMessages} in ${chalk.blue.underline(
+          `${file}:${position}`
+        )}\n\n${frame}\n\n${chalk.dim(stack)}`
+      );
     } finally {
       if (this.bundle) {
         await this.bundle.close();

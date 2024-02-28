@@ -6,17 +6,16 @@ import { watch } from "chokidar";
 import chalk from "chalk";
 
 export default class Watch extends Build {
-  constructor({
-    type,
-    spinners
-  } = {
+  constructor(
+    { type, spinners } = {
       type: "",
-      spinners: {}
-    }) {
+      spinners: {},
+    }
+  ) {
     super();
 
     this.type = type;
-    this.glob = config[this.type].glob.input;
+    this.glob = config[this.type].glob.input; // E.g. config.js.glob.input = "./src/assets/js/**/*.js"
     this.spinners = spinners;
 
     this.errors = [];
@@ -34,6 +33,8 @@ export default class Watch extends Build {
     // Wait for the "ready" event before continuing
     await new Promise((resolve, reject) => {
       watcher
+
+        // On ready
         .on("ready", () => {
           const endTime = process.hrtime(startTime);
           const time = endTime[0] + endTime[1] / 1e9;
@@ -47,6 +48,8 @@ export default class Watch extends Build {
           });
           resolve();
         })
+
+        // On error
         .on("error", (error) => {
           const endTime = process.hrtime(startTime);
           const time = endTime[0] + endTime[1] / 1e9;
@@ -67,11 +70,11 @@ export default class Watch extends Build {
         const type = extension === "scss" ? "css" : extension;
 
         try {
+          // build.run() is called here from the parent class Build
           await super.run({ type, dev: true, input });
-
         } catch (errors) {
           this.errors = errors;
         }
-      })
+      });
   }
 }

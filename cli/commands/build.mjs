@@ -1,7 +1,11 @@
+import config from "../../config.mjs";
+
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
 import CopyLiquid from "../methods/liquid/copy.mjs";
+
+import { globSync } from "glob";
 
 // Terminal packages
 import Spinnies from "spinnies";
@@ -18,6 +22,7 @@ export default class Build {
     }
   ) {
     this.type = type;
+
     this.js = {
       input: js.files,
       errors: [],
@@ -46,7 +51,6 @@ export default class Build {
   }
 
   async run({ type = this.type, dev = false, input } = {}) {
-
     try {
       switch (type) {
         case "assets":
@@ -67,13 +71,15 @@ export default class Build {
         default:
           throw new Error(`Build type ${this.type} is not supported`);
       }
-
     } finally {
-
-      const errors = [...this.js.errors, ...this.scss.errors, ...this.tailwind.errors];
+      const errors = [
+        ...this.js.errors,
+        ...this.scss.errors,
+        ...this.tailwind.errors,
+      ];
       errors?.forEach((error, index) => {
-        console.log(`\n${chalk.dim('-').repeat(process.stdout.columns)}\n`);
-        console.log(error)
+        console.log(`\n${chalk.dim("-").repeat(process.stdout.columns)}\n`);
+        console.log(error);
 
         if (index === errors.length - 1) console.log(`\n`);
       });
@@ -107,14 +113,17 @@ export default class Build {
   /**
    * Bundle js files
    */
-  async buildJs({ dev = false, input = this.js.input, indent = 0 } = {}) {
+  async buildJs({ dev = false, input, indent = 0 } = {}) {
+    const _input =
+      input || globSync(config.js.glob.input, config.js.glob.options);
+
     const startTime = this.startSpinner({
       type: "js",
       text: "Bundling JS files...",
-      indent
+      indent,
     });
 
-    const bundleJs = new BundleJs({ input });
+    const bundleJs = new BundleJs({ _input });
 
     try {
       // Clear errors when dev mode is enabled
@@ -136,14 +145,16 @@ export default class Build {
   /**
    * Compile scss files
    */
-  async buildCss({ dev = false, input = this.scss.input, indent = 0 } = {}) {
+  async buildCss({ dev = false, input, indent = 0 } = {}) {
+    const _input =
+      input || globSync(config.scss.glob.input, config.scss.glob.options);
     const startTime = this.startSpinner({
       type: "css",
       text: "compiling scss files...",
-      indent
+      indent,
     });
 
-    const compileScss = new CompileScss({ input });
+    const compileScss = new CompileScss({ _input });
 
     try {
       // Clear errors when dev mode is enabled
@@ -157,7 +168,7 @@ export default class Build {
     this.endSpinner({
       type: "css",
       startTime,
-      text: 'compiling scss files',
+      text: "compiling scss files",
       errors: this.scss.errors,
     });
   }
@@ -169,12 +180,12 @@ export default class Build {
     const startTime = this.startSpinner({
       type: "tailwind",
       text: "compiling tailwind files...",
-      indent
+      indent,
     });
 
     const compileTailwind = new CompileTailwind({
       input: this.tailwind.input,
-      output: this.tailwind.output
+      output: this.tailwind.output,
     });
 
     try {
@@ -201,12 +212,12 @@ export default class Build {
     const startTime = this.startSpinner({
       type: "liquid",
       text: "Copying liquid files...",
-      indent
+      indent,
     });
 
     const copyLiquid = new CopyLiquid({
       input: this.liquid.input,
-      output: this.liquid.output
+      output: this.liquid.output,
     });
 
     try {
