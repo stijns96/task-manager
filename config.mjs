@@ -25,16 +25,16 @@ export default {
   },
   js: {
     glob: {
-      input: `.${src.root}/assets/js/**/*.js`
+      input: `${src.root}/assets/js/**/*.js`
     },
   },
   scss: {
     glob: {
-      input: `.${src.root}/assets/scss/**/*.scss`,
+      input: `${src.root}/assets/scss/**/*.scss`,
       options: {
         ignore: [
-          `.${src.root}/assets/scss/**/_*.scss`,
-          `.${src.root}/assets/scss/{partials,tailwind}/**`,
+          `${src.root}/assets/scss/**/_*.scss`,
+          `${src.root}/assets/scss/{partials,tailwind}/**`,
         ],
         ...globOptions
       }
@@ -42,7 +42,7 @@ export default {
   },
   tailwind: {
     glob: {
-      input: `.${src.root}/assets/scss/tailwind.scss`,
+      input: `${src.root}/assets/scss/tailwind.scss`,
       options: {
         ...globOptions
       }
@@ -50,10 +50,17 @@ export default {
   },
   liquid: {
     glob: {
-      input: `.${src.root}/**/*.liquid`,
+      input: `${src.root}/**/*.liquid`,
       options: {
         ...globOptions
       }
     },
   },
+  watch: {
+    options: {
+      // Ignore dotfiles
+      ignored: /(^|[\/\\])\../,
+      persistent: true,
+    }
+  }
 };
