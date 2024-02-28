@@ -1,5 +1,13 @@
+/** @type {import('glob').GlobOptions} */
 const globOptions = {
   posix: true,
+};
+
+/** @type {import('chokidar').WatchOptions} */
+const watchOptions = {
+  // Ignore dotfiles
+  ignored: /(^|[\/\\])\../,
+  persistent: true,
 };
 
 const src = {
@@ -41,24 +49,16 @@ export default {
   tailwind: {
     glob: {
       input: `${src.root}/assets/scss/tailwind.scss`,
-      options: {
-        ...globOptions
-      }
+      options: globOptions
     },
   },
   liquid: {
     glob: {
       input: `${src.root}/**/*.liquid`,
-      options: {
-        ...globOptions
-      }
+      options: globOptions
     },
   },
   watch: {
-    options: {
-      // Ignore dotfiles
-      ignored: /(^|[\/\\])\../,
-      persistent: true,
-    }
+    options: watchOptions
   }
 };
