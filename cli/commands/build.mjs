@@ -54,6 +54,7 @@ export default class Build {
           break;
         case "js":
           await this.buildJs({ dev, input });
+          if (dev) await this.buildTailwind({ dev });
           break;
         case "css":
           await this.buildCss({ dev, input });
