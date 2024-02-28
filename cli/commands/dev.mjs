@@ -63,7 +63,6 @@ export default class Dev {
   async watchJs() {
     const watch = new Watch({
       type: "js",
-      glob: this.js.glob,
       spinners: this.spinners,
     });
     await watch.run();
@@ -72,7 +71,6 @@ export default class Dev {
   async watchScss() {
     const watch = new Watch({
       type: "scss",
-      glob: this.scss.glob,
       spinners: this.spinners,
     });
     await watch.run();
@@ -81,7 +79,6 @@ export default class Dev {
   async watchLiquid() {
     const watch = new Watch({
       type: "liquid",
-      glob: this.liquid.glob,
       spinners: this.spinners,
     });
     await watch.run();
