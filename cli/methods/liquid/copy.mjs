@@ -1,10 +1,12 @@
 // File system packages
 import fse from "fs-extra";
+import { globSync } from "glob";
+import config from "../../../config.mjs";
 
 
 export default class CopyLiquid {
-  constructor({ input, output } = { input: [""] || "", output: "" }) {
-    this.input = typeof input === "string" ? [input] : input;
+  constructor({ input, output } = { input: "", output: "" }) {
+    this.input = input || globSync(config.liquid.glob.input, config.liquid.glob.options);
     this.output = output;
 
     this.errors = [];
@@ -16,10 +18,13 @@ export default class CopyLiquid {
 
   async copyFiles() {
     for (const input of this.input) {
-      const to = input.replace("src", this.output);
+      const to = input.replace("src", config.theme.root);
+
+      console.log("input", input);
+      console.log("to", to);
 
       try {
-        await fse.copy(input, to, {
+        fse.copy(input, to, {
           preserveTimestamps: true,
         });
 
