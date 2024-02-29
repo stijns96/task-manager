@@ -7,7 +7,7 @@ import chalk from "chalk";
 import { globSync } from "glob";
 
 export default class BundleJs {
-  constructor({ input } = { input: [""] || "" }) {
+  constructor({ input } = { input: "" }) {
     this.input =
       input || globSync(config.js.glob.input, config.js.glob.options);
 

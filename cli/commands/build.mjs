@@ -50,24 +50,37 @@ export default class Build {
     });
   }
 
+  /**
+   * Run build
+   * @param {string} type - Type of file to build
+   * @param {boolean} dev - Development mode
+   * @param {string} input - Input file - only used in dev mode
+   */
   async run({ type = this.type, dev = false, input } = {}) {
     try {
       switch (type) {
         case "assets":
           await this.buildAssets({ dev, input });
           break;
+
         case "js":
           await this.buildJs({ dev, input });
+          // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });
           break;
+
         case "css":
           await this.buildCss({ dev, input });
+          // Only build tailwind when in *NOT* dev mode. 
           if (!dev) await this.buildTailwind({ dev });
           break;
+
         case "liquid":
           await this.buildLiquid({ dev });
+          // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });
           break;
+
         default:
           throw new Error(`Build type ${this.type} is not supported`);
       }
@@ -112,18 +125,18 @@ export default class Build {
 
   /**
    * Bundle js files
+   * @param {boolean} dev - Development mode
+   * @param {String} input - Input file - only used in dev mode
+   * @param {number} indent - Indentation level in the terminal
    */
   async buildJs({ dev = false, input, indent = 0 } = {}) {
-    const _input =
-      input || globSync(config.js.glob.input, config.js.glob.options);
-
     const startTime = this.startSpinner({
       type: "js",
       text: "Bundling JS files...",
       indent,
     });
 
-    const bundleJs = new BundleJs({ _input });
+    const bundleJs = new BundleJs({ input });
 
     try {
       // Clear errors when dev mode is enabled
@@ -144,17 +157,18 @@ export default class Build {
 
   /**
    * Compile scss files
+   * @param {boolean} dev - Development mode
+   * @param {String} input - Input file - only used in dev mode
+   * @param {number} indent - Indentation level in the terminal
    */
   async buildCss({ dev = false, input, indent = 0 } = {}) {
-    const _input =
-      input || globSync(config.scss.glob.input, config.scss.glob.options);
     const startTime = this.startSpinner({
       type: "css",
       text: "compiling scss files...",
       indent,
     });
 
-    const compileScss = new CompileScss({ _input });
+    const compileScss = new CompileScss({ input });
 
     try {
       // Clear errors when dev mode is enabled
