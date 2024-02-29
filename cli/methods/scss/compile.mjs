@@ -14,10 +14,8 @@ import tailwind from "tailwindcss";
 import { globSync } from "glob";
 
 export default class CompileScss {
-  constructor({ input }) {
+  constructor({ input } = {}) {
     this.input = input ? [input] : globSync(config.scss.glob.input, config.scss.glob.options);
-
-    console.log(this.input);
 
     this.errors = [];
   }

@@ -12,7 +12,7 @@ import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Build {
-  constructor({ type = "assets" }) {
+  constructor({ type } = { type: "assets" }) {
     this.type = type;
 
     this.js = {
@@ -61,7 +61,6 @@ export default class Build {
           break;
 
         case "liquid":
-          console.log(input);
           await this.buildLiquid({ dev, input });
           // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });

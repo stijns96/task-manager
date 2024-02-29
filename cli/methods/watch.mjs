@@ -6,12 +6,7 @@ import { watch } from "chokidar";
 import chalk from "chalk";
 
 export default class Watch extends Build {
-  constructor(
-    { type, spinners } = {
-      type: "",
-      spinners: {},
-    }
-  ) {
+  constructor({ type, spinners } = { type: "", spinners: {} }) {
     super();
 
     this.type = type;

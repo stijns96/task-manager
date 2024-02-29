@@ -5,7 +5,7 @@ import config from "../../../config.mjs";
 
 
 export default class CopyLiquid {
-  constructor({ input }) {
+  constructor({ input } = {}) {
     this.input = input ? [input] : globSync(config.liquid.glob.input, config.liquid.glob.options);
 
     this.errors = [];
