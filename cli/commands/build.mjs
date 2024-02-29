@@ -189,6 +189,8 @@ export default class Build {
 
   /**
    * Compile tailwind files
+   * @param {boolean} dev - Development mode
+   * @param {number} indent - Indentation level in the terminal
    */
   async buildTailwind({ dev = false, indent = 0 }) {
     const startTime = this.startSpinner({
