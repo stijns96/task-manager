@@ -54,7 +54,7 @@ export default {
   },
   tailwind: {
     glob: {
-      input: `${src.root}/assets/scss/tailwind.scss`,
+      input: `${src.root}/assets/scss/tailwind/*.scss`,
       options: globOptions
     },
   },

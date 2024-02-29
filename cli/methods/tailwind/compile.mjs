@@ -42,7 +42,7 @@ export default class CompileTailwind {
         if (layerName !== "base") {
           postcssPlugins.push(
             purgecss({
-              content: ["./src/**/*.js", "./src/**/*.liquid"],
+              content: [config.js.glob.input, config.liquid.glob.input],
             })
           );
         }
@@ -62,7 +62,7 @@ export default class CompileTailwind {
       }
 
       // Schrijf de gecombineerde inhoud naar een uitvoerbestand
-      fse.outputFileSync(`./theme/assets/main.css`, combinedContent);
+      fse.outputFileSync(`${config.theme.assetsDir}/main.css`, combinedContent);
     } catch (error) {
       this.errors.push(error);
     }
