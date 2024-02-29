@@ -14,8 +14,10 @@ import tailwind from "tailwindcss";
 import { globSync } from "glob";
 
 export default class CompileScss {
-  constructor({ input } = { input: "" }) {
-    this.input = [input] || globSync(config.scss.glob.input, config.scss.glob.options);
+  constructor({ input }) {
+    this.input = input ? [input] : globSync(config.scss.glob.input, config.scss.glob.options);
+
+    console.log(this.input);
 
     this.errors = [];
   }
@@ -40,7 +42,7 @@ export default class CompileScss {
           .then(({ css }) => {
             // Create file name based on the directory structure. E.g. sections-files.scss
             const fileName = file
-              .replace("src/assets/scss/", "")
+              .replace(`${config.src.assetsDir}/scss/`, "")
               .replace("theme/", "")
               .replace(".scss", ".css");
 
@@ -64,7 +66,7 @@ export default class CompileScss {
             const layer = `@layer ${layerName} {\n${css}\n}`;
 
             // Write the file
-            fse.outputFile(`theme/assets/${outputFileName}`, layer);
+            fse.outputFile(`${config.theme.assetsDir}/${outputFileName}`, layer);
           });
       } catch (error) {
         this.errors.push(error);

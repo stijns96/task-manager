@@ -12,34 +12,19 @@ import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Build {
-  constructor(
-    { type, js, scss, tailwind, liquid } = {
-      type: "assets",
-      js: {},
-      scss: {},
-      tailwind: {},
-      liquid: {},
-    }
-  ) {
+  constructor({ type = "assets" }) {
     this.type = type;
 
     this.js = {
-      input: js.files,
       errors: [],
     };
     this.scss = {
-      input: scss.files,
       errors: [],
     };
     this.tailwind = {
-      input: tailwind.files,
-      output: tailwind.output,
       errors: [],
     };
-
     this.liquid = {
-      input: liquid.files,
-      output: liquid.output,
       errors: [],
     };
 
@@ -56,7 +41,7 @@ export default class Build {
    * @param {boolean} dev - Development mode
    * @param {string} input - Input file - only used in dev mode
    */
-  async run({ type = this.type, dev = false, input } = {}) {
+  async run({ type, dev, input } = { type: this.type, dev: false, input: "" }) {
     try {
       switch (type) {
         case "assets":
@@ -76,7 +61,8 @@ export default class Build {
           break;
 
         case "liquid":
-          await this.buildLiquid({ dev });
+          console.log(input);
+          await this.buildLiquid({ dev, input });
           // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });
           break;
@@ -199,10 +185,7 @@ export default class Build {
       indent,
     });
 
-    const compileTailwind = new CompileTailwind({
-      input: this.tailwind.input,
-      output: this.tailwind.output,
-    });
+    const compileTailwind = new CompileTailwind();
 
     try {
       // Clear errors when dev mode is enabled
@@ -224,17 +207,14 @@ export default class Build {
   /**
    * Copy liquid files
    */
-  async buildLiquid({ dev = false, indent = 0 } = {}) {
+  async buildLiquid({ dev = false, input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "liquid",
       text: "Copying liquid files...",
       indent,
     });
 
-    const copyLiquid = new CopyLiquid({
-      input: this.liquid.input,
-      output: this.liquid.output,
-    });
+    const copyLiquid = new CopyLiquid({ input });
 
     try {
       // Clear errors when dev mode is enabled

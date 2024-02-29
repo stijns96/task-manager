@@ -1,6 +1,19 @@
+import { glob } from 'glob';
+
+const src = {
+  root: `src`,
+};
+
+const theme = {
+  root: `theme`,
+}
+
 /** @type {import('glob').GlobOptions} */
 const globOptions = {
   posix: true,
+  ignore: [
+    `${src.root}/**/_*.{js,scss}`,
+  ]
 };
 
 /** @type {import('chokidar').WatchOptions} */
@@ -10,15 +23,11 @@ const watchOptions = {
   persistent: true,
 };
 
-const src = {
-  root: `./src`,
-};
-
-const theme = {
-  root: `./theme`,
-}
-
 export default {
+  src: {
+    root: src.root,
+    assetsDir: `${src.root}/assets`,
+  },
   theme: {
     root: theme.root,
     assetsDir: `${theme.root}/assets`,
@@ -32,23 +41,18 @@ export default {
   js: {
     glob: {
       input: `${src.root}/assets/js/**/*.js`,
-      options: {
-        ignore: [
-          `${src.root}/assets/js/**/_*.js`,
-        ],
-        ...globOptions
-      }
+      options: globOptions
     },
   },
   scss: {
     glob: {
       input: `${src.root}/assets/scss/**/*.scss`,
       options: {
+        ...globOptions,
         ignore: [
-          `${src.root}/assets/scss/**/_*.scss`,
-          `${src.root}/assets/scss/{partials,tailwind}/**`,
+          ...globOptions.ignore,
+          `${src.root}/assets/scss/{partials,tailwind}/**/*.scss`,
         ],
-        ...globOptions
       }
     },
   },

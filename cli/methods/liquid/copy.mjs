@@ -5,9 +5,8 @@ import config from "../../../config.mjs";
 
 
 export default class CopyLiquid {
-  constructor({ input, output } = { input: "", output: "" }) {
-    this.input = input || globSync(config.liquid.glob.input, config.liquid.glob.options);
-    this.output = output;
+  constructor({ input }) {
+    this.input = input ? [input] : globSync(config.liquid.glob.input, config.liquid.glob.options);
 
     this.errors = [];
   }
@@ -18,10 +17,7 @@ export default class CopyLiquid {
 
   async copyFiles() {
     for (const input of this.input) {
-      const to = input.replace("src", config.theme.root);
-
-      console.log("input", input);
-      console.log("to", to);
+      const to = input.replace(config.src.root, config.theme.root);
 
       try {
         fse.copy(input, to, {
