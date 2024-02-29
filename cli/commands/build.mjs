@@ -1,40 +1,30 @@
+import config from "../../config.mjs";
+
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
 import CopyLiquid from "../methods/liquid/copy.mjs";
+
+import { globSync } from "glob";
 
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Build {
-  constructor(
-    { type, js, scss, tailwind, liquid } = {
-      type: "assets",
-      js: {},
-      scss: {},
-      tailwind: {},
-      liquid: {},
-    }
-  ) {
+  constructor({ type = "assets" }) {
     this.type = type;
+
     this.js = {
-      input: js.files,
       errors: [],
     };
     this.scss = {
-      input: scss.files,
       errors: [],
     };
     this.tailwind = {
-      input: tailwind.files,
-      output: tailwind.output,
       errors: [],
     };
-
     this.liquid = {
-      input: liquid.files,
-      output: liquid.output,
       errors: [],
     };
 
@@ -45,34 +35,50 @@ export default class Build {
     });
   }
 
-  async run({ type = this.type, dev = false, input } = {}) {
-
+  /**
+   * Run build
+   * @param {string} type - Type of file to build
+   * @param {boolean} dev - Development mode
+   * @param {string} input - Input file - only used in dev mode
+   */
+  async run({ type, dev, input } = { type: this.type, dev: false, input: "" }) {
     try {
       switch (type) {
         case "assets":
           await this.buildAssets({ dev, input });
           break;
+
         case "js":
           await this.buildJs({ dev, input });
-          break;
-        case "css":
-          await this.buildCss({ dev, input });
-          if (!dev) await this.buildTailwind({ dev });
-          break;
-        case "liquid":
-          await this.buildLiquid({ dev });
+          // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });
           break;
+
+        case "css":
+          await this.buildCss({ dev, input });
+          // Only build tailwind when in *NOT* dev mode. 
+          if (!dev) await this.buildTailwind({ dev });
+          break;
+
+        case "liquid":
+          console.log(input);
+          await this.buildLiquid({ dev, input });
+          // Only build tailwind when in dev mode
+          if (dev) await this.buildTailwind({ dev });
+          break;
+
         default:
           throw new Error(`Build type ${this.type} is not supported`);
       }
-
     } finally {
-
-      const errors = [...this.js.errors, ...this.scss.errors, ...this.tailwind.errors];
+      const errors = [
+        ...this.js.errors,
+        ...this.scss.errors,
+        ...this.tailwind.errors,
+      ];
       errors?.forEach((error, index) => {
-        console.log(`\n${chalk.dim('-').repeat(process.stdout.columns)}\n`);
-        console.log(error)
+        console.log(`\n${chalk.dim("-").repeat(process.stdout.columns)}\n`);
+        console.log(error);
 
         if (index === errors.length - 1) console.log(`\n`);
       });
@@ -105,12 +111,15 @@ export default class Build {
 
   /**
    * Bundle js files
+   * @param {boolean} dev - Development mode
+   * @param {String} input - Input file - only used in dev mode
+   * @param {number} indent - Indentation level in the terminal
    */
-  async buildJs({ dev = false, input = this.js.input, indent = 0 } = {}) {
+  async buildJs({ dev = false, input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "js",
       text: "Bundling JS files...",
-      indent
+      indent,
     });
 
     const bundleJs = new BundleJs({ input });
@@ -134,12 +143,15 @@ export default class Build {
 
   /**
    * Compile scss files
+   * @param {boolean} dev - Development mode
+   * @param {String} input - Input file - only used in dev mode
+   * @param {number} indent - Indentation level in the terminal
    */
-  async buildCss({ dev = false, input = this.scss.input, indent = 0 } = {}) {
+  async buildCss({ dev = false, input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "css",
       text: "compiling scss files...",
-      indent
+      indent,
     });
 
     const compileScss = new CompileScss({ input });
@@ -156,25 +168,24 @@ export default class Build {
     this.endSpinner({
       type: "css",
       startTime,
-      text: 'compiling scss files',
+      text: "compiling scss files",
       errors: this.scss.errors,
     });
   }
 
   /**
    * Compile tailwind files
+   * @param {boolean} dev - Development mode
+   * @param {number} indent - Indentation level in the terminal
    */
   async buildTailwind({ dev = false, indent = 0 }) {
     const startTime = this.startSpinner({
       type: "tailwind",
       text: "compiling tailwind files...",
-      indent
+      indent,
     });
 
-    const compileTailwind = new CompileTailwind({
-      input: this.tailwind.input,
-      output: this.tailwind.output
-    });
+    const compileTailwind = new CompileTailwind();
 
     try {
       // Clear errors when dev mode is enabled
@@ -196,17 +207,14 @@ export default class Build {
   /**
    * Copy liquid files
    */
-  async buildLiquid({ dev = false, indent = 0 } = {}) {
+  async buildLiquid({ dev = false, input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "liquid",
       text: "Copying liquid files...",
-      indent
+      indent,
     });
 
-    const copyLiquid = new CopyLiquid({
-      input: this.liquid.input,
-      output: this.liquid.output
-    });
+    const copyLiquid = new CopyLiquid({ input });
 
     try {
       // Clear errors when dev mode is enabled

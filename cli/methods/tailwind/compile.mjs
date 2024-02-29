@@ -1,3 +1,5 @@
+import config from "../../../config.mjs";
+
 // File system packages
 import fse from "fs-extra";
 import { globSync } from "glob";
@@ -13,8 +15,11 @@ import tailwind from "tailwindcss";
 import purgecss from "@fullhuman/postcss-purgecss";
 
 export default class CompileTailwind {
-  constructor({ input, output } = { input: [""] || "", output: "" }) {
-    this.inputs = globSync('./src/assets/scss/tailwind/*.scss', { posix: true });
+  constructor() {
+    this.inputs = globSync(
+      config.tailwind.glob.input,
+      config.tailwind.glob.options
+    );
 
     this.errors = [];
   }
@@ -31,17 +36,15 @@ export default class CompileTailwind {
         const layerName = input.split("/").pop().replace(".scss", "");
         const { css } = sass.compile(input);
 
-        const postcssPlugins = [
-          tailwind,
-          autoprefixer,
-          postcssPresetEnv(),
-        ];
+        const postcssPlugins = [tailwind, autoprefixer, postcssPresetEnv()];
 
         // Add purgecss if layerName is not base
         if (layerName !== "base") {
-          postcssPlugins.push(purgecss({
-            content: ["./src/**/*.js", "./src/**/*.liquid"],
-          }));
+          postcssPlugins.push(
+            purgecss({
+              content: [config.js.glob.input, config.liquid.glob.input],
+            })
+          );
         }
 
         const result = await postcss(postcssPlugins).process(css, {
@@ -59,7 +62,7 @@ export default class CompileTailwind {
       }
 
       // Schrijf de gecombineerde inhoud naar een uitvoerbestand
-      fse.outputFileSync(`./theme/assets/main.css`, combinedContent);
+      fse.outputFileSync(`${config.theme.assetsDir}/main.css`, combinedContent);
     } catch (error) {
       this.errors.push(error);
     }

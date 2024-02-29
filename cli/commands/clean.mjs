@@ -1,3 +1,6 @@
+import config from "../../config.mjs";
+
+
 // File system packages
 import fse from "fs-extra";
 import { globSync } from "glob";
@@ -39,7 +42,7 @@ export default class Clean {
    * Clean assets
    */
   async assets() {
-    fse.emptyDirSync("theme/assets");
+    fse.emptyDirSync(config.theme.assetsDir);
   }
 
   /**
@@ -47,7 +50,7 @@ export default class Clean {
    */
   async js() {
     // Get all js files
-    const files = globSync("theme/assets/*.js", this.globOptions);
+    const files = globSync(`${config.theme.assetsDir}/*.js`, this.globOptions);
 
     // Remove all files
     files.forEach((file) => fse.removeSync(file));
@@ -58,7 +61,7 @@ export default class Clean {
    */
   async css() {
     // Get all css files
-    const files = globSync("theme/assets/*.css", this.globOptions);
+    const files = globSync(`${config.theme.assetsDir}/*.css`, this.globOptions);
 
     // Remove all css files
     files.forEach((file) => fse.removeSync(file));
@@ -69,7 +72,7 @@ export default class Clean {
    */
   async liquid() {
     // Get all liquid files
-    const files = globSync("theme/*.liquid", this.globOptions);
+    const files = globSync(`${config.theme.root}/*.liquid`, this.globOptions);
 
     // Remove all liquid files
     files.forEach((file) => fse.removeSync(file));

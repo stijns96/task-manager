@@ -5,33 +5,7 @@ import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Dev {
-  constructor({ js, scss, tailwind, liquid } = { js: {}, scss: {}, tailwind: {}, liquid: {} }) {
-    // JavaScript files
-    this.js = {
-      glob: js.glob,
-      files: js.files,
-    };
-
-    // SCSS files
-    this.scss = {
-      glob: scss.glob,
-      files: scss.files,
-    };
-
-    // Tailwind
-    this.tailwind = {
-      input: tailwind.files,
-      output: tailwind.output,
-      errors: [],
-    };
-
-    // Liquid
-    this.liquid = {
-      glob: liquid.glob,
-      files: liquid.files,
-    };
-
-
+  constructor() {
     // Spinner
     this.spinners = new Spinnies({
       succeedColor: "gray",
@@ -63,7 +37,6 @@ export default class Dev {
   async watchJs() {
     const watch = new Watch({
       type: "js",
-      glob: this.js.glob,
       spinners: this.spinners,
     });
     await watch.run();
@@ -72,7 +45,6 @@ export default class Dev {
   async watchScss() {
     const watch = new Watch({
       type: "scss",
-      glob: this.scss.glob,
       spinners: this.spinners,
     });
     await watch.run();
@@ -81,7 +53,6 @@ export default class Dev {
   async watchLiquid() {
     const watch = new Watch({
       type: "liquid",
-      glob: this.liquid.glob,
       spinners: this.spinners,
     });
     await watch.run();
