@@ -40,13 +40,13 @@ export default {
   },
   js: {
     glob: {
-      input: `${src.root}/assets/js/**/*.js`,
+      input: [`${src.root}/assets/js/**/*.js`],
       options: globOptions
     },
   },
   scss: {
     glob: {
-      input: `${src.root}/assets/scss/**/*.scss`,
+      input: [`${src.root}/assets/scss/**/*.scss`],
       options: {
         ...globOptions,
         ignore: [
@@ -58,13 +58,13 @@ export default {
   },
   tailwind: {
     glob: {
-      input: `${src.root}/assets/scss/tailwind/*.scss`,
+      input: [`${src.root}/assets/scss/tailwind/*.scss`],
       options: globOptions
     },
   },
   static: {
     glob: {
-      input: `${src.root}/**/*.{liquid,json}`,
+      input: [`${src.root}/**/*.{liquid,json}`, `${src.root}/assets/static/**/*`],
       options: globOptions
     },
   },

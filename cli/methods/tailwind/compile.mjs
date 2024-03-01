@@ -42,7 +42,7 @@ export default class CompileTailwind {
         if (layerName !== "base") {
           postcssPlugins.push(
             purgecss({
-              content: [config.js.glob.input, config.static.glob.input],
+              content: [...config.js.glob.input, ...config.static.glob.input],
             })
           );
         }

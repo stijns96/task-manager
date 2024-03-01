@@ -17,7 +17,14 @@ export default class CopyStatic {
 
   async copyFiles() {
     for (const input of this.input) {
-      const to = input.replace(config.src.root, config.theme.root);
+      // Get the file name
+      const fileName = input.split('/').pop();
+
+      const to = input.startsWith(config.src.assetsDir)
+        // Copy the file to theme/assets
+        ? `${config.theme.assetsDir}/${fileName}`
+        // Copy the file to e.g. theme/layout
+        : input.replace(config.src.root, config.theme.root);
 
       try {
         fse.copy(input, to, {
