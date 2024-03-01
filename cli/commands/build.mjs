@@ -4,8 +4,7 @@ import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
 import CopyLiquid from "../methods/liquid/copy.mjs";
-
-import { globSync } from "glob";
+import CopyJson from "../methods/json/copy.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
@@ -25,6 +24,9 @@ export default class Build {
       errors: [],
     };
     this.liquid = {
+      errors: [],
+    };
+    this.json = {
       errors: [],
     };
 
@@ -66,6 +68,10 @@ export default class Build {
           if (dev) await this.buildTailwind({ dev });
           break;
 
+        case "json":
+          await this.buildJson({ dev, input });
+          break;
+
         default:
           throw new Error(`Build type ${this.type} is not supported`);
       }
@@ -99,6 +105,7 @@ export default class Build {
       this.buildCss({ indent: 2 }),
       this.buildTailwind({ indent: 2 }),
       this.buildLiquid({ indent: 2 }),
+      this.buildJson({ indent: 2 }),
     ]);
 
     this.endSpinner({
@@ -228,6 +235,34 @@ export default class Build {
       type: "liquid",
       startTime,
       text: "copying liquid files",
+    });
+  }
+
+  /**
+   * Copy json files
+   */
+  async buildJson({ dev = false, input, indent = 0 } = {}) {
+    const startTime = this.startSpinner({
+      type: "json",
+      text: "Copying JSON files...",
+      indent,
+    });
+
+    const copyJson = new CopyJson({ input });
+
+    try {
+      // Clear errors when dev mode is enabled
+      if (dev) this.json.errors = [];
+
+      await copyJson.run();
+    } catch (errors) {
+      this.json.errors = errors;
+    }
+
+    this.endSpinner({
+      type: "json",
+      startTime,
+      text: "copying JSON files",
     });
   }
 
