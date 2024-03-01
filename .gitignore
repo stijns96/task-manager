@@ -1,14 +1,4 @@
-# Ignore all assets
-theme/assets/*
 
-# Ignore all user settings
-theme/config/settings_data.json
-
-# Ignore all templates
-theme
-
-# Ignore shopifyignore in theme folder, should be only in dev
-theme/.shopifyignore
 
 # Node artifact files
 node_modules
