@@ -7,9 +7,8 @@ import chalk from "chalk";
 import { globSync } from "glob";
 
 export default class BundleJs {
-  constructor({ input } = { input: "" }) {
-    this.input =
-      input || globSync(config.js.glob.input, config.js.glob.options);
+  constructor({ input } = {}) {
+    this.input = input ? [input] : globSync(config.js.glob.input, config.js.glob.options);
 
     this.bundle;
     this.errors = [];
