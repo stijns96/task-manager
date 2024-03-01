@@ -1,0 +1,66 @@
+{% comment %}
+  Renders a list of the item prices (regular, sale) for cart items and notification
+
+  Accepts:
+  - item: {Object} item Liquid object
+  - price_class: {String} Adds a price class to the price element (optional)
+  - hide_compare_at_price: {Boolean} Hides the compare at price (optional)
+    In the cart and cart drawer, the compare at price should be hidden as it is not calculated in the total discounts.
+    Any applied discounts will show
+
+  Usage:
+  {% render 'format-item-price', item: item %}
+{% endcomment %}
+
+{%- liquid
+  unless hide_compare_at_price
+    assign hide_compare_at_price = false
+  endunless
+
+  assign original_price = item.original_price
+  assign final_price = item.final_price
+
+  if hide_compare_at_price == false and item.variant.compare_at_price > original_price
+    assign original_price = item.variant.compare_at_price
+  endif
+
+  capture default_price_str
+    render 'format-translation', namespace: 'products.product.price', key: 'price', fallback: 'Price'
+  endcapture
+
+  capture sale_price_str
+    render 'format-translation', namespace: 'products.product.price', key: 'sale_price', fallback: 'Sale price'
+  endcapture
+
+  capture regular_price_str
+    render 'format-translation', namespace: 'products.product.price', key: 'regular_price', fallback: 'Regular price'
+  endcapture
+-%}
+<dl class="price m-0 flex gap-2 {{ price_class }}">
+  {%- if original_price > final_price -%}
+    {%- comment -%} New price {%- endcomment -%}
+    <dt class="sr-only">
+      {{ sale_price_str }}
+    </dt>
+    <dd class="price__item price__item--sale">
+      {{ final_price | money }}
+    </dd>
+    {%- comment -%} Old price {%- endcomment -%}
+    <dt class="sr-only">
+      {{ regular_price_str }}
+    </dt>
+    <dd>
+      <s class="price__item price__item--compare">
+        {{ original_price | money }}
+      </s>
+    </dd>
+  {%- else -%}
+    {%- comment -%} Regular price {%- endcomment -%}
+    <dt class="sr-only">
+      {{ default_price_str }}
+    </dt>
+    <dd class="price__item--regular price__item">
+      {{ final_price | money }}
+    </dd>
+  {%- endif -%}
+</dl>

@@ -1,0 +1,66 @@
+{%- comment -%}
+  Renders the filter options as collapsbile elements. This is a section setting that can be toggled off.
+
+  Accepts:
+    - label: shown as the filter label in the main menu. (required)
+    - summary_content: everything that should be in the sub-menu (required)
+    - filter_index: forloop.index from the collection.filters loop. (required)
+    - collapsible: {Boolean} (optional)
+{%- endcomment -%}
+
+{%- liquid
+  unless collapsible
+    assign collapsible = settings.enable_filter_collapsibles
+  endunless
+
+  if label == 'Size' or is_color
+    assign is_size_or_color_class = 'collapsible-is-open'
+  endif
+-%}
+
+<div
+  class="filter__group filter__group--name-{{ label | handleize }} js-filter group/filter-group w-full overflow-y-auto border-b border-b-color-default bg-color-default {{ is_size_or_color_class }}"
+  data-filter-option
+  data-index="{{ filter_index }}"
+  {% if collapsible %}
+    data-collapsible-group
+  {% endif %}
+>
+  <button
+    type="button"
+    class="filter__option-trigger flex w-full items-center justify-between py-3 transition-all"
+    {% if collapsible %}
+      data-collapsible-trigger
+    {% endif %}
+  >
+    <span class="text-sm font-bold leading-5">
+      {{- label | escape -}}
+    </span>
+    {%- if collapsible -%}
+      {%- render 'global-icon',
+        icon: 'minus',
+        icon_class: 'size-3 hidden group-[.collapsible-is-open]/filter-group:block'
+      -%}
+      {%- render 'global-icon',
+        icon: 'plus',
+        icon_class: 'size-3 block group-[.collapsible-is-open]/filter-group:hidden'
+      -%}
+    {%- endif -%}
+  </button>
+  <div
+    class="filter-group__target w-full overflow-y-auto bg-color-default transition-all"
+    {% if collapsible %}
+      data-collapsible-target
+    {% endif %}
+  >
+    {%- if collapsible -%}
+      <div class="overflow-hidden">
+    {%- endif -%}
+    <div class="pb-4">
+      {{- summary_content -}}
+    </div>
+    {%- if collapsible -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>

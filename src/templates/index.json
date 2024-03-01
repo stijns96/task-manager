@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "image-banner": {
+      "type": "image-banner",
+      "settings": {
+        "container_width": "",
+        "min_ratio_mobile": "aspect-[9\/16]",
+        "min_ratio_desktop": "md:aspect-[16\/9]",
+        "image_lazy": true,
+        "content_color_scheme": "",
+        "position_horizontal": "justify-center",
+        "position_vertical": "items-center",
+        "text_align": "text-center",
+        "heading": "I'm a heading",
+        "heading_element": "h2",
+        "heading_size": "h2",
+        "heading_color": "",
+        "text": "I explain what the banner is for.",
+        "text_color": "",
+        "button_label_1": "Read more",
+        "button_url_1": "",
+        "button_type_1": "",
+        "button_label_2": "Read more",
+        "button_url_2": "",
+        "button_type_2": ""
+      }
+    },
+    "featured-collection-slider": {
+      "type": "featured-collection-slider",
+      "settings": {
+        "container_width": "",
+        "color_scheme": "",
+        "all_products_count": 8,
+        "collection": "t-shirts",
+        "lazy": true,
+        "heading": "Featured collection slider",
+        "heading_element": "h2",
+        "heading_size": "h4",
+        "button_text": "View all",
+        "button_url": "",
+        "button_color_scheme": "",
+        "button_size": "button--md",
+        "swiper_indication": "pagination",
+        "swiper_navigation": true
+      }
+    }
+  },
+  "order": [
+    "image-banner",
+    "featured-collection-slider"
+  ]
+}

@@ -5,10 +5,7 @@ theme/assets/*
 theme/config/settings_data.json
 
 # Ignore all templates
-theme/templates/**/*.json
-theme/sections/*.json
-theme/locales/*.json
-!theme/locales/en-dev.default.json
+theme
 
 # Ignore shopifyignore in theme folder, should be only in dev
 theme/.shopifyignore

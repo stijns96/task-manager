@@ -1,0 +1,46 @@
+{%- comment %}
+  Renders small badges for products that are on sale or sold out.
+
+  Accepts:
+  - product: {Object} Product Liquid object (optional)
+  - use_variant: {Boolean} Renders selected or first variant price instead of overall product pricing (optional)
+
+  Usage:
+  {% render 'product-badges-small', product: product %}
+{%- endcomment %}
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+-%}
+{%- if target.compare_at_price > target.price
+  or product.available == false
+  or target.price_varies
+  and target.compare_at_price_varies
+-%}
+  <div class="badges flex flex-wrap gap-1">
+    {%- if target.compare_at_price > target.price
+      or target.price_varies
+      and target.compare_at_price_varies
+    %}
+      <span
+        class="price__badge-sale badge badge--sale px-2 py-0 text-xs"
+        aria-hidden="true"
+      >
+        {% render 'format-translation', namespace: 'products.product.on_sale', fallback: 'Sale' %}
+      </span>
+    {%- elsif product.available == false -%}
+      <span
+        class="price__badge-sold-out badge badge--sold-out px-2 py-0 text-xs"
+        aria-hidden="true"
+      >
+        {% render 'format-translation',
+          namespace: 'products.product.sold_out',
+          fallback: 'Sold out'
+        %}
+      </span>
+    {%- endif -%}
+  </div>
+{%- endif -%}

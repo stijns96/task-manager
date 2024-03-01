@@ -1,0 +1,28 @@
+{%- if cart != empty -%}
+  {%- for item in cart.items -%}
+    <div id="cart-notification-product-{{ item.id }}" class="cart-item">
+      {%- if item.image != blank -%}
+        {%-
+          render 'format-image',
+          image_object: item.image,
+          alt: item.title | escape,
+          max_width: 80,
+          aspect_ratio: "1/1",
+          class: "w-20 border border-color-default"
+        -%}
+      {%- endif -%}
+      <div class="flex grow flex-col">
+        <p class="cart-notification-product__name my-0 font-bold">
+          {{ item.product.title | escape }}
+        </p>
+
+        {%- render 'format-item-price', item: item, class: 'cart-notification-prices text-sm' -%}
+
+        {%- render 'cart-item-properties',
+          item: item,
+          class: 'cart-notification-properties mt-auto'
+        -%}
+      </div>
+    </div>
+  {%- endfor -%}
+{%- endif -%}
