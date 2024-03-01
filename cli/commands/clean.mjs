@@ -42,7 +42,7 @@ export default class Clean {
    * Clean assets
    */
   async assets() {
-    fse.emptyDirSync(config.theme.assetsDir);
+    fse.emptyDirSync(config.theme.root);
   }
 
   /**
@@ -72,9 +72,20 @@ export default class Clean {
    */
   async liquid() {
     // Get all liquid files
-    const files = globSync(`${config.theme.root}/*.liquid`, this.globOptions);
+    const files = globSync(`${config.theme.root}/**/*.liquid`, this.globOptions);
 
     // Remove all liquid files
+    files.forEach((file) => fse.removeSync(file));
+  }
+
+  /**
+   * Clean json
+   */
+  async json() {
+    // Get all json files
+    const files = globSync(`${config.theme.root}/**/*.json`, this.globOptions);
+
+    // Remove all json files
     files.forEach((file) => fse.removeSync(file));
   }
 
