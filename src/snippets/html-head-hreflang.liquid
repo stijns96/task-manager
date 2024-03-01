@@ -1,0 +1,96 @@
+{%- liquid
+  # This is the logic for the alternate hreflang tags. It works in combination with the metaobjects and product/collection/page metafields.
+  # Hreflang is an HTML attribute used to specify the language and geographical targeting of a webpage.
+  # https://developers.google.com/search/blog/2013/04/x-default-hreflang-for-international-pages
+
+  # Metaobject: Alternate tag
+  # Fields
+  # - hreflang, single line text, for example nl
+  # - domain, single line text, for example https://www.example.nl
+
+  # Example metafields per page, collection, product, blog, article
+  # page.metafields.alternate_tag._nl = '/awesome-page'
+  # page.metafields.alternate_tag._de = '/awesome-page'
+  # collection.metafields.alternate_tag._nl = '/awesome-collection'
+  # collection.metafields.alternate_tag._de = '/awesome-collection'
+  # product.metafields.alternate_tag._nl = '/awesome-product'
+  # product.metafields.alternate_tag._de = '/awesome-product'
+  # article.metafields.alternate_tag._nl = '/news/awesome-article'
+  # article.metafields.alternate_tag._de = '/news/awesome-article'
+-%}
+
+{%- for alternate_tag in shop.metaobjects.alternate_tag.values -%}
+  {%- liquid
+    # Format hreflang code.
+    assign hreflang = alternate_tag.hreflang | downcase | handleize
+    # Add a _ before the hreflang, because metafield keys needs at least 3 characters.
+    assign metafield_key = hreflang | prepend: '_'
+    # Default start values.
+    assign href = ''
+    assign route_prefix = ''
+    assign route_slug = ''
+
+    # Skip when the metaobject data is empty.
+    if alternate_tag.hreflang == blank or alternate_tag.domain == blank
+      continue
+    endif
+
+    # Logic to get the correct other store links based on metafield on type.
+    case request.page_type
+      when 'index'
+        assign href = alternate_tag.domain
+      when 'product'
+        if product != blank and product.metafields.alternate_tag[metafield_key] != blank
+          assign route_prefix = '/products'
+          assign route_slug = product.metafields.alternate_tag[metafield_key]
+        endif
+
+      when 'collection'
+        if collection != blank and collection.metafields.alternate_tag[metafield_key] != blank
+          assign route_prefix = '/collections'
+          assign route_slug = collection.metafields.alternate_tag[metafield_key]
+        endif
+
+      when 'article'
+        if article != blank and article.metafields.alternate_tag[metafield_key] != blank
+          assign route_prefix = '/blogs'
+          assign route_slug = article.metafields.alternate_tag[metafield_key]
+        endif
+
+      when 'blog'
+        if blog != blank and blog.metafields.alternate_tag[metafield_key] != blank
+          assign route_prefix = '/blogs'
+          assign route_slug = blog.metafields.alternate_tag[metafield_key]
+        endif
+
+      when 'page'
+        if page != blank and page.metafields.alternate_tag[metafield_key] != blank
+          assign route_prefix = '/pages'
+          assign route_slug = page.metafields.alternate_tag[metafield_key]
+        endif
+    endcase
+
+    # Check user input. The route_slug needs to start with a slash. If it is not there add it.
+    if route_slug != blank
+      # Take the first character of the string.
+      assign slash_checker = route_slug | slice: 0
+      # Set the / before the route_slug when the first character is not a /.
+      if slash_checker != '/'
+        assign route_slug = route_slug | prepend: '/'
+      endif
+    endif
+
+    # Add route_prefix and route_slug when set.
+    if route_prefix != blank and route_slug != blank
+      assign href = alternate_tag.domain | append: route_prefix | append: route_slug
+    endif
+  -%}
+
+  {%- if href != blank -%}
+    <link
+      rel="alternate"
+      hreflang="{{ hreflang }}"
+      href="{{ href }}"
+    >
+  {%- endif -%}
+{%- endfor -%}

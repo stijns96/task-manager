@@ -1,5 +1,0 @@
-@mixin font-weight($weight) {
-  font-family: var(--font-#{$weight}-family);
-  font-weight: var(--font-#{$weight}-weight);
-  font-style: var(--font-#{$weight}-style);
-}

@@ -2,10 +2,10 @@
   {
     "name": "theme_info",
     "theme_name": "Code Base Theme",
-    "theme_version": "3.6.0",
+    "theme_version": "3.7.0",
     "theme_author": "Code",
-    "theme_documentation_url": "https://shopify.dev/themes",
-    "theme_support_url": "https://www.code.nl"
+    "theme_documentation_url": "https:\/\/shopify.dev\/themes",
+    "theme_support_url": "https:\/\/www.code.nl"
   },
   {
     "name": "Branding",
@@ -41,7 +41,7 @@
       {
         "type": "header",
         "content": "Structured data",
-        "info": "These SEO values deliver more easily indexable content to search crawlers like Googlebot. Test you data [here](https://search.google.com/test/rich-results)"
+        "info": "These SEO values deliver more easily indexable content to search crawlers like Googlebot. Test you data [here](https:\/\/search.google.com\/test\/rich-results)"
       },
       {
         "type": "image_picker",
@@ -72,7 +72,7 @@
       {
         "type": "text",
         "id": "jsonld_address_state",
-        "label": "State / province"
+        "label": "State \/ province"
       },
       {
         "type": "text",
@@ -97,55 +97,55 @@
         "type": "text",
         "id": "social_facebook_link",
         "label": "Facebook link",
-        "placeholder": "https://facebook.com/your_url"
+        "placeholder": "https:\/\/facebook.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_x_link",
         "label": "X link",
-        "placeholder": "https://x.com/your_url"
+        "placeholder": "https:\/\/x.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_pinterest_link",
         "label": "Pinterest link",
-        "placeholder": "https://pinterest.com/your_url"
+        "placeholder": "https:\/\/pinterest.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_instagram_link",
         "label": "Instagram link",
-        "placeholder": "https://instagram.com/your_url"
+        "placeholder": "https:\/\/instagram.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_snapchat_link",
         "label": "Snapchat link",
-        "placeholder": "https://snapchat.com/your_url"
+        "placeholder": "https:\/\/snapchat.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_tumblr_link",
         "label": "Tumblr link",
-        "placeholder": "https://tumblr.com/your_url"
+        "placeholder": "https:\/\/tumblr.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_youtube_link",
         "label": "Youtube link",
-        "placeholder": "https://youtube.com/your_url"
+        "placeholder": "https:\/\/youtube.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_vimeo_link",
         "label": "Vimeo link",
-        "placeholder": "https://vimeo.com/your_url"
+        "placeholder": "https:\/\/vimeo.com\/your_url"
       },
       {
         "type": "text",
         "id": "social_tiktok_link",
         "label": "TikTok link",
-        "placeholder": "https://www.tiktok.com"
+        "placeholder": "https:\/\/www.tiktok.com"
       }
     ]
   },
@@ -163,13 +163,13 @@
         "type": "text",
         "id": "klaviyo_bis_api_key",
         "label": "Klaviyo account API key",
-        "info": "[Where to find this?](https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys#find-your-api-keys2)"
+        "info": "[Where to find this?](https:\/\/help.klaviyo.com\/hc\/en-us\/articles\/115005062267-How-to-Manage-Your-Account-s-API-Keys#find-your-api-keys2)"
       },
       {
         "type": "text",
         "id": "klaviyo_bis_listid",
         "label": "Klaviyo List ID",
-        "info": "[Where to find this?](https://help.klaviyo.com/hc/en-us/articles/115005078647-How-to-Find-a-List-ID#find-your-list-id1)"
+        "info": "[Where to find this?](https:\/\/help.klaviyo.com\/hc\/en-us\/articles\/115005078647-How-to-Find-a-List-ID#find-your-list-id1)"
       },
       {
         "type": "header",
@@ -179,7 +179,7 @@
         "type": "checkbox",
         "id": "klaviyo_bis_subscribe_checked",
         "label": "Check opt-in checkbox by default",
-        "info": "Check the checkbox for the opt-in by default. Make sure this allowed in your country/region.",
+        "info": "Check the checkbox for the opt-in by default. Make sure this allowed in your country\/region.",
         "default": false
       },
       {
@@ -431,7 +431,7 @@
         "type": "textarea",
         "id": "cookiebot_script",
         "label": "Cookiebot script",
-        "default": "<script id=\"Cookiebot\" src=\"https://consent.cookiebot.com/uc.js\" data-cbid=\"00000000-0000-0000-0000-000000000000\" data-blockingmode=\"auto\" type=\"text/javascript\"></script>"
+        "default": "<script id=\"Cookiebot\" src=\"https:\/\/consent.cookiebot.com\/uc.js\" data-cbid=\"00000000-0000-0000-0000-000000000000\" data-blockingmode=\"auto\" type=\"text\/javascript\"><\/script>"
       }
     ]
   },

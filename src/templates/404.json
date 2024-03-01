@@ -6,30 +6,28 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Page not found"
+            "heading": "Page not found",
+            "heading_style": "h2"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>It looks like you've reached a URL that doesn’t exist. Please use the navigation above or try again.<\/p>"
+            "text": "<p>It looks like you've reached a URL that doesn’t exist. Please use the navigation above or try again.</p>"
           }
         },
         "button": {
           "type": "button",
           "settings": {
             "button_label": "Back to home",
-            "button_link": "\/",
+            "button_link": "/",
             "button_color_scheme": "button--secondary"
           }
         }
       },
-      "block_order": [
-        "heading",
-        "text",
-        "button"
-      ],
+      "block_order": ["heading", "text", "button"],
       "settings": {
+        "section_color_scheme": ""
       }
     },
     "newsletter": {
@@ -39,13 +37,14 @@
           "type": "heading",
           "settings": {
             "heading": "Subscribe to our newsletter",
-            "heading_element": "h2"
+            "heading_element": "h2",
+            "heading_style": "h4"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>Be the first to know about new collections and exclusive offers.<\/p>"
+            "text": "<p>Be the first to know about new collections and exclusive offers.</p>"
           }
         },
         "form": {
@@ -55,18 +54,12 @@
           }
         }
       },
-      "block_order": [
-        "heading",
-        "text",
-        "form"
-      ],
+      "block_order": ["heading", "text", "form"],
       "settings": {
-        "width_layout": ""
+        "width_layout": "",
+        "section_color_scheme": ""
       }
     }
   },
-  "order": [
-    "404-banner",
-    "newsletter"
-  ]
+  "order": ["404-banner", "newsletter"]
 }
