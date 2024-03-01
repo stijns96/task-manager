@@ -1,4 +1,5 @@
 import config from "../../../config.mjs";
+import { pathToFileURL } from 'url';
 
 // File system packages
 import fse from "fs-extra";
@@ -28,7 +29,19 @@ export default class CompileScss {
     for (const file of this.input) {
       try {
         // Compile the file
-        const { css } = await sass.compileAsync(file);
+        const { css } = await sass.compileAsync(file, {
+          importers: [{
+            // An importer that redirects relative URLs starting with "~" to
+            // `node_modules`.
+            findFileUrl(url) {
+              if (!url.startsWith('~')) return null;
+              const baseUrl = pathToFileURL('node_modules/'); // Construct base URL
+              const resolvedUrl = new URL(url.substring(1), baseUrl); // Use base URL to resolve
+              return resolvedUrl;
+            }
+          }]
+        });
+
 
         // Process the CSS
         await postcss([
@@ -69,6 +82,7 @@ export default class CompileScss {
       } catch (error) {
         this.errors.push(error);
       }
+
     }
 
     if (this.errors.length > 0) {
