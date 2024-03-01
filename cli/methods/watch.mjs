@@ -5,6 +5,8 @@ import Build from "../commands/build.mjs";
 import { watch } from "chokidar";
 import chalk from "chalk";
 
+import fse from "fs-extra";
+
 export default class Watch extends Build {
   constructor({ type, spinners } = { type: "", spinners: {} }) {
     super();
@@ -56,10 +58,10 @@ export default class Watch extends Build {
         });
     });
 
-    watcher
-      // On change
-      .on("change", async (path) => {
+    ["add", "change", "unlink"].forEach((event) =>
+      watcher.on(event, async (path) => {
         const input = path.replace(/\\/g, "/");
+        const fileName = input.split("/").pop();
         const extension = path.split(".").pop();
 
         let type;
@@ -77,10 +79,21 @@ export default class Watch extends Build {
 
         try {
           // build.run() is called here from the parent class Build
-          await super.run({ type, dev: true, input });
+          if (event !== "unlink") {
+            await super.run({ type, dev: true, input });
+          } else {
+            if (input.includes(config.src.assetsDir)) {
+              await fse.removeSync(`${config.theme.assetsDir}/${fileName}`);
+            } else {
+              console.log(input.replace(config.src.root, config.theme.root));
+              await fse.removeSync(input.replace(config.src.root, config.theme.root));
+            }
+
+          }
         } catch (errors) {
           this.errors = errors;
         }
-      });
+      })
+    );
   }
 }
