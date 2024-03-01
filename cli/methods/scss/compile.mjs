@@ -54,7 +54,6 @@ export default class CompileScss {
             // Create file name based on the directory structure. E.g. sections-files.scss
             const fileName = file
               .replace(`${config.src.assetsDir}/scss/`, "")
-              .replace("theme/", "")
               .replace(".scss", ".css");
 
             // Replace slashes with dashes
