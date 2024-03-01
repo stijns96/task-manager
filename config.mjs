@@ -47,18 +47,12 @@ export default {
   scss: {
     glob: {
       input: [`${src.root}/assets/scss/**/*.scss`],
-      options: {
-        ...globOptions,
-        ignore: [
-          ...globOptions.ignore,
-          `${src.root}/assets/scss/{partials,tailwind}/**/*.scss`,
-        ],
-      }
+      options: globOptions,
     },
   },
   tailwind: {
     glob: {
-      input: [`${src.root}/assets/scss/tailwind/*.scss`],
+      input: [`${src.root}/assets/tailwind/scss/*.scss`],
       options: globOptions
     },
   },
