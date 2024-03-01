@@ -68,6 +68,12 @@ export default {
       options: globOptions
     },
   },
+  json: {
+    glob: {
+      input: `${src.root}/**/*.json`,
+      options: globOptions
+    },
+  },
   watch: {
     options: watchOptions
   }
