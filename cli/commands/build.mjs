@@ -3,8 +3,7 @@ import config from "../../config.mjs";
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
-import CopyLiquid from "../methods/liquid/copy.mjs";
-import CopyJson from "../methods/json/copy.mjs";
+import CopyStatic from "../methods/static/copy.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
@@ -23,10 +22,7 @@ export default class Build {
     this.tailwind = {
       errors: [],
     };
-    this.liquid = {
-      errors: [],
-    };
-    this.json = {
+    this.static = {
       errors: [],
     };
 
@@ -62,14 +58,10 @@ export default class Build {
           if (!dev) await this.buildTailwind({ dev });
           break;
 
-        case "liquid":
-          await this.buildLiquid({ dev, input });
+        case "static":
+          await this.buildStatic({ dev, input });
           // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });
-          break;
-
-        case "json":
-          await this.buildJson({ dev, input });
           break;
 
         default:
@@ -104,8 +96,7 @@ export default class Build {
       this.buildJs({ indent: 2 }),
       this.buildCss({ indent: 2 }),
       this.buildTailwind({ indent: 2 }),
-      this.buildLiquid({ indent: 2 }),
-      this.buildJson({ indent: 2 }),
+      this.buildStatic({ indent: 2 }),
     ]);
 
     this.endSpinner({
@@ -211,58 +202,30 @@ export default class Build {
   }
 
   /**
-   * Copy liquid files
+   * Copy static files
    */
-  async buildLiquid({ dev = false, input, indent = 0 } = {}) {
+  async buildStatic({ dev = false, input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
-      type: "liquid",
-      text: "Copying liquid files...",
+      type: "static",
+      text: "Copying static files...",
       indent,
     });
 
-    const copyLiquid = new CopyLiquid({ input });
+    const copyStatic = new CopyStatic({ input });
 
     try {
       // Clear errors when dev mode is enabled
-      if (dev) this.liquid.errors = [];
+      if (dev) this.static.errors = [];
 
-      await copyLiquid.run();
+      await copyStatic.run();
     } catch (errors) {
-      this.liquid.errors = errors;
+      this.static.errors = errors;
     }
 
     this.endSpinner({
-      type: "liquid",
+      type: "static",
       startTime,
-      text: "copying liquid files",
-    });
-  }
-
-  /**
-   * Copy json files
-   */
-  async buildJson({ dev = false, input, indent = 0 } = {}) {
-    const startTime = this.startSpinner({
-      type: "json",
-      text: "Copying JSON files...",
-      indent,
-    });
-
-    const copyJson = new CopyJson({ input });
-
-    try {
-      // Clear errors when dev mode is enabled
-      if (dev) this.json.errors = [];
-
-      await copyJson.run();
-    } catch (errors) {
-      this.json.errors = errors;
-    }
-
-    this.endSpinner({
-      type: "json",
-      startTime,
-      text: "copying JSON files",
+      text: "copying static files",
     });
   }
 

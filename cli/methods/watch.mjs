@@ -62,7 +62,18 @@ export default class Watch extends Build {
         const input = path.replace(/\\/g, "/");
         const extension = path.split(".").pop();
 
-        const type = extension === "scss" ? "css" : extension;
+        let type;
+
+        switch (extension) {
+          case "js":
+            type = "js";
+            break;
+          case "scss":
+            type = "css";
+            break;
+          default:
+            type = 'static';
+        }
 
         try {
           // build.run() is called here from the parent class Build

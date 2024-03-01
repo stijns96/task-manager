@@ -31,7 +31,7 @@ export default class Dev {
 
   async watch() {
     // load parallel
-    await Promise.all([this.watchJs(), this.watchScss(), this.watchLiquid(), this.watchJson()]);
+    await Promise.all([this.watchJs(), this.watchScss(), this.watchStatic()]);
   }
 
   async watchJs() {
@@ -50,17 +50,9 @@ export default class Dev {
     await watch.run();
   }
 
-  async watchLiquid() {
+  async watchStatic() {
     const watch = new Watch({
-      type: "liquid",
-      spinners: this.spinners,
-    });
-    await watch.run();
-  }
-
-  async watchJson() {
-    const watch = new Watch({
-      type: "json",
+      type: "static",
       spinners: this.spinners,
     });
     await watch.run();

@@ -62,15 +62,9 @@ export default {
       options: globOptions
     },
   },
-  liquid: {
+  static: {
     glob: {
-      input: `${src.root}/**/*.liquid`,
-      options: globOptions
-    },
-  },
-  json: {
-    glob: {
-      input: `${src.root}/**/*.json`,
+      input: `${src.root}/**/*.{liquid,json}`,
       options: globOptions
     },
   },

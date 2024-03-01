@@ -4,9 +4,9 @@ import { globSync } from "glob";
 import config from "../../../config.mjs";
 
 
-export default class CopyLiquid {
+export default class CopyStatic {
   constructor({ input } = {}) {
-    this.input = input ? [input] : globSync(config.liquid.glob.input, config.liquid.glob.options);
+    this.input = input ? [input] : globSync(config.static.glob.input, config.static.glob.options);
 
     this.errors = [];
   }
