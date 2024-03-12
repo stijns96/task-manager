@@ -27,7 +27,7 @@ export default class CopyStatic {
         : input.replace(config.src.root, config.theme.root);
 
       try {
-        fse.copy(input, to, {
+        await fse.copy(input, to, {
           preserveTimestamps: true,
         });
 
