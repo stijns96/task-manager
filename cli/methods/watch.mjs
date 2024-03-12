@@ -74,7 +74,7 @@ export default class Watch extends Build {
             type = "css";
             break;
           default:
-            type = 'static';
+            type = 'public';
         }
 
         try {

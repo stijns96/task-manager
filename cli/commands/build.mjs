@@ -1,7 +1,7 @@
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
-import CopyStatic from "../methods/static/copy.mjs";
+import CopyPublic from "../methods/public/copy.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
@@ -20,7 +20,7 @@ export default class Build {
     this.tailwind = {
       errors: [],
     };
-    this.static = {
+    this.public = {
       errors: [],
     };
 
@@ -56,8 +56,8 @@ export default class Build {
           if (!dev) await this.buildTailwind({ dev });
           break;
 
-        case "static":
-          await this.buildStatic({ dev, input });
+        case "public":
+          await this.buildPublic({ dev, input });
           // Only build tailwind when in dev mode
           if (dev) await this.buildTailwind({ dev });
           break;
@@ -94,7 +94,7 @@ export default class Build {
       this.buildJs({ indent: 2 }),
       this.buildCss({ indent: 2 }),
       this.buildTailwind({ indent: 2 }),
-      this.buildStatic({ indent: 2 }),
+      this.buildPublic({ indent: 2 }),
     ]);
 
     this.endSpinner({
@@ -200,30 +200,30 @@ export default class Build {
   }
 
   /**
-   * Copy static files
+   * Copy public files
    */
-  async buildStatic({ dev = false, input, indent = 0 } = {}) {
+  async buildPublic({ dev = false, input, indent = 0 } = {}) {
     const startTime = this.startSpinner({
-      type: "static",
-      text: "Copying static files...",
+      type: "public",
+      text: "Copying public files...",
       indent,
     });
 
-    const copyStatic = new CopyStatic({ input });
+    const copyPublic = new CopyPublic({ input });
 
     try {
       // Clear errors when dev mode is enabled
-      if (dev) this.static.errors = [];
+      if (dev) this.public.errors = [];
 
-      await copyStatic.run();
+      await copyPublic.run();
     } catch (errors) {
-      this.static.errors = errors;
+      this.public.errors = errors;
     }
 
     this.endSpinner({
-      type: "static",
+      type: "public",
       startTime,
-      text: "copying static files",
+      text: "copying public files",
     });
   }
 

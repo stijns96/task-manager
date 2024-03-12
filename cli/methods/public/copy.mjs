@@ -4,7 +4,7 @@ import { globSync } from "glob";
 import config from "../../lib/config.mjs";
 
 
-export default class CopyStatic {
+export default class CopyPublic {
   constructor({ input } = {}) {
     this.input = input ? [input] : globSync(config.assets.public.glob.input, config.assets.public.glob.options);
 

@@ -31,7 +31,7 @@ export default class Dev {
 
   async watch() {
     // load parallel
-    await Promise.all([this.watchJs(), this.watchScss(), this.watchStatic()]);
+    await Promise.all([this.watchJs(), this.watchScss(), this.watchPublic()]);
   }
 
   async watchJs() {
@@ -50,9 +50,9 @@ export default class Dev {
     await watch.run();
   }
 
-  async watchStatic() {
+  async watchPublic() {
     const watch = new Watch({
-      type: "static",
+      type: "public",
       spinners: this.spinners,
     });
     await watch.run();
