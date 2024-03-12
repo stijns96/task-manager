@@ -8,7 +8,7 @@ import { globSync } from "glob";
 
 export default class BundleJs {
   constructor({ input } = {}) {
-    this.input = input ? [input] : globSync(config.js.glob.input, config.js.glob.options);
+    this.input = input ? [input] : globSync(config.assets.js.glob.input, config.assets.js.glob.options);
 
     this.bundle;
     this.errors = [];
