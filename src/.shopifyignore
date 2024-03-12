@@ -1,0 +1,6 @@
+config/settings_data.json
+templates/*.json
+
+# Ignore all locale files except en-dev.default.json
+!locale/*.json
+locale/en-dev.default.json
