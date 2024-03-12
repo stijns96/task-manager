@@ -9,7 +9,6 @@ const globOptions = {
 /** @type {import('chokidar').WatchOptions} */
 const watchOptions = {
   // Ignore dotfiles
-  ignored: /(^|[\/\\])\../,
   persistent: true,
 };
 
@@ -21,11 +20,20 @@ export default {
   theme: {
     root: 'theme',
     assetsDir: 'theme/assets',
+    glob: {
+      input: [`src/**/*`],
+      options: {
+        ...globOptions,
+        ignore: [
+          `src/assets`,
+        ]
+      }
+    },
   },
   assets: {
     public: {
       glob: {
-        input: [`src/**/*.{liquid,json}`, `src/assets/public/**/*`],
+        input: [`src/assets/public/**/*`],
         options: globOptions
       },
     },
