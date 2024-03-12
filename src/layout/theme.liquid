@@ -3,66 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    {%- liquid
-      render 'html-head-robots'
-      render 'html-head-title'
-      render 'html-head-description'
-      render 'html-head-canonical'
-      render 'html-head-hreflang'
-      render 'html-head-prefetch'
-      render 'html-head-preconnect'
-      render 'html-head-favicon'
-      render 'html-head-tags'
-      render 'html-head-fonts'
-      render 'html-head-css'
-      render 'html-head-google'
-      render 'cookiebot-script'
-      render 'html-head-js'
-    -%}
     {{ content_for_header }}
-    {%- render 'cookiebot-consent' -%}
   </head>
 
-  <body class="group/body {% render 'html-template-class' %}">
-    <a class="skip-to-content button button--secondary sr-only self-start" href="#MainContent">
-      {% render 'format-translation',
-        namespace: 'accessibility',
-        key: 'skip_to_text',
-        fallback: 'Skip to text'
-      -%}
-    </a>
-
-    {%- sections 'header-group' %}
-
-    {%- render 'cart-notification' -%}
-
+  <body class="group/body">
     <main id="MainContent" class="focus-none content-for-layout" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
-
-    {%- sections 'footer-group' -%}
-
-    <ul hidden>
-      <li id="a11y-refresh-page-message">
-        {% render 'format-translation',
-          namespace: 'accessibility',
-          key: 'refresh_page',
-          fallback: 'Refresh page'
-        -%}
-      </li>
-    </ul>
-
-    {%- liquid
-      render 'html-bottom-js'
-      render 'seo-json-ld'
-
-      if settings.klaviyo_bis_api_key != blank
-        render 'klaviyo-tracking', render_script_tags: true
-
-        if settings.klaviyo_bis
-          render 'klaviyo-back-in-stock'
-        endif
-      endif
-    -%}
   </body>
 </html>

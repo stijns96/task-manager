@@ -1,9 +1,0 @@
-{%- liquid
-  # To noindex, nofollow a page, add a metafield to the product|page|collection|blog|article with the namespace 'seo' and key 'hidden' with the value '1'.
-  # More info on https://shopify.dev/docs/apps/marketing/seo#step-2-hide-a-resource-from-search-engines-and-sitemaps
-
-  # Output the index, follow meta tag when the seo.hidden metafield is not 1
-  if [request.page_type].metafields.seo.hidden != 1
-    echo '<meta name="robots" content="index,follow">'
-  endif
--%}
