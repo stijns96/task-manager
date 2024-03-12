@@ -1,18 +1,8 @@
-import { glob } from 'glob';
-
-const src = {
-  root: `src`,
-};
-
-const theme = {
-  root: `theme`,
-}
-
 /** @type {import('glob').GlobOptions} */
 const globOptions = {
   posix: true,
   ignore: [
-    `${src.root}/**/_*.{js,scss}`,
+    `src/**/_*.{js,scss}`,
   ]
 };
 
@@ -25,41 +15,37 @@ const watchOptions = {
 
 export default {
   src: {
-    root: src.root,
-    assetsDir: `${src.root}/assets`,
+    root: 'src',
+    assetsDir: 'src/assets',
   },
   theme: {
-    root: theme.root,
-    assetsDir: `${theme.root}/assets`,
-    configDir: `${theme.root}/config`,
-    localesDir: `${theme.root}/layout`,
-    localesDir: `${theme.root}/locales`,
-    sectionsDir: `${theme.root}/sections`,
-    snippetsDir: `${theme.root}/snippets`,
-    templatesDir: `${theme.root}/templates`,
+    root: 'theme',
+    assetsDir: 'theme/assets',
   },
-  js: {
-    glob: {
-      input: [`${src.root}/assets/js/**/*.js`],
-      options: globOptions
+  assets: {
+    public: {
+      glob: {
+        input: [`src/**/*.{liquid,json}`, `src/assets/public/**/*`],
+        options: globOptions
+      },
     },
-  },
-  scss: {
-    glob: {
-      input: [`${src.root}/assets/scss/**/*.scss`],
-      options: globOptions,
+    js: {
+      glob: {
+        input: [`src/assets/js/**/*.js`],
+        options: globOptions
+      },
     },
-  },
-  tailwind: {
-    glob: {
-      input: [`${src.root}/assets/tailwind/scss/*.scss`],
-      options: globOptions
+    scss: {
+      glob: {
+        input: [`src/assets/scss/**/*.scss`],
+        options: globOptions,
+      },
     },
-  },
-  static: {
-    glob: {
-      input: [`${src.root}/**/*.{liquid,json}`, `${src.root}/assets/static/**/*`],
-      options: globOptions
+    tailwind: {
+      glob: {
+        input: [`src/assets/tailwind/scss/*.scss`],
+        options: globOptions
+      },
     },
   },
   watch: {
