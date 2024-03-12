@@ -1,4 +1,10 @@
 {
-  "sections": {},
-  "order": []
+  "sections": {
+    "test": {
+      "type": "test"
+    }
+  },
+  "order": [
+    "test"
+  ]
 }
