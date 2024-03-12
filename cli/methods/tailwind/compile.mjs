@@ -17,8 +17,8 @@ import purgecss from "@fullhuman/postcss-purgecss";
 export default class CompileTailwind {
   constructor() {
     this.inputs = globSync(
-      config.tailwind.glob.input,
-      config.tailwind.glob.options
+      config.assets.tailwind.glob.input,
+      config.assets.tailwind.glob.options
     );
 
     this.errors = [];
@@ -42,7 +42,7 @@ export default class CompileTailwind {
         if (layerName !== "base") {
           postcssPlugins.push(
             purgecss({
-              content: [...config.js.glob.input, ...config.static.glob.input],
+              content: [...config.assets.js.glob.input, ...config.assets.public.glob.input],
             })
           );
         }

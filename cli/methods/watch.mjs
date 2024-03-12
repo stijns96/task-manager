@@ -12,7 +12,7 @@ export default class Watch extends Build {
     super();
 
     this.type = type;
-    this.glob = config[this.type].glob.input; // E.g. config.js.glob.input = "./src/assets/js/**/*.js"
+    this.glob = config[this.type].glob.input; // E.g. config.assets.js.glob.input = "./src/assets/js/**/*.js"
     this.spinners = spinners;
 
     this.errors = [];

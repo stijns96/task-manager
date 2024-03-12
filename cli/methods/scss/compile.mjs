@@ -16,7 +16,7 @@ import { globSync } from "glob";
 
 export default class CompileScss {
   constructor({ input } = {}) {
-    this.input = input ? [input] : globSync(config.scss.glob.input, config.scss.glob.options);
+    this.input = input ? [input] : globSync(config.assets.scss.glob.input, config.assets.scss.glob.options);
 
     this.errors = [];
   }
