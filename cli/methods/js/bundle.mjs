@@ -1,4 +1,4 @@
-import config from "../../../config.mjs";
+import config from "../../lib/config.mjs";
 
 import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";

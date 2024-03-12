@@ -1,4 +1,4 @@
-import config from "../../../config.mjs";
+import config from "../../lib/config.mjs";
 import { pathToFileURL } from 'url';
 
 // File system packages

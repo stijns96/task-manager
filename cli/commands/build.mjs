@@ -1,5 +1,3 @@
-import config from "../../config.mjs";
-
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
