@@ -1,12 +1,12 @@
 // File system packages
 import fse from "fs-extra";
 import { globSync } from "glob";
-import config from "../../lib/config.mjs";
+import config from "../lib/config.mjs";
 
 
-export default class CopyPublic {
-  constructor({ input } = {}) {
-    this.input = input ? [input] : globSync(config.assets.public.glob.input, config.assets.public.glob.options);
+export default class Copy {
+  constructor({ input, globOptions } = {}) {
+    this.input = globSync(input, globOptions);
 
     this.errors = [];
   }

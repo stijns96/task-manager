@@ -1,16 +1,21 @@
+import config from "../lib/config.mjs";
+
 import BundleJs from "../methods/js/bundle.mjs";
 import CompileScss from "../methods/scss/compile.mjs";
 import CompileTailwind from "../methods/tailwind/compile.mjs";
-import CopyPublic from "../methods/public/copy.mjs";
+import Copy from "../methods/copy.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Build {
-  constructor({ type } = { type: "assets" }) {
+  constructor({ type } = { type: "all" }) {
     this.type = type;
 
+    this.theme = {
+      errors: [],
+    };
     this.js = {
       errors: [],
     };
@@ -40,8 +45,10 @@ export default class Build {
   async run({ type, dev, input } = { type: this.type, dev: false, input: "" }) {
     try {
       switch (type) {
-        case "assets":
-          await this.buildAssets({ dev, input });
+        case "theme":
+          await this.buildTheme({ dev, input });
+          // Only build tailwind when in dev mode
+          if (dev) await this.buildTailwind({ dev });
           break;
 
         case "js":
@@ -58,12 +65,11 @@ export default class Build {
 
         case "public":
           await this.buildPublic({ dev, input });
-          // Only build tailwind when in dev mode
-          if (dev) await this.buildTailwind({ dev });
           break;
 
         default:
-          throw new Error(`Build type ${this.type} is not supported`);
+          await this.buildAll();
+          break;
       }
     } finally {
       const errors = [
@@ -81,58 +87,55 @@ export default class Build {
   }
 
   /**
-   * Build assets
+   * Build all
    */
-  async buildAssets() {
+  async buildAll() {
     const startTime = this.startSpinner({
-      type: "assets",
-      text: "Building assets...",
+      type: "all",
+      text: "Building all...",
     });
 
     // Run js and css parallel
     await Promise.all([
-      this.buildJs({ indent: 2 }),
-      this.buildCss({ indent: 2 }),
-      this.buildTailwind({ indent: 2 }),
+      this.buildTheme({ indent: 2 }),
       this.buildPublic({ indent: 2 }),
+      this.buildCss({ indent: 2 }),
+      this.buildJs({ indent: 2 }),
+      this.buildTailwind({ indent: 2 }),
     ]);
 
     this.endSpinner({
-      type: "assets",
+      type: "all",
       startTime,
-      text: "building assets",
+      text: "building all",
     });
   }
 
   /**
-   * Bundle js files
-   * @param {boolean} dev - Development mode
-   * @param {String} input - Input file - only used in dev mode
-   * @param {number} indent - Indentation level in the terminal
+   * Copy theme files
    */
-  async buildJs({ dev = false, input, indent = 0 } = {}) {
+  async buildTheme({ dev = false, indent = 0 } = {}) {
     const startTime = this.startSpinner({
-      type: "js",
-      text: "Bundling JS files...",
+      type: "theme",
+      text: "Copying theme files...",
       indent,
     });
 
-    const bundleJs = new BundleJs({ input });
+    const copyTheme = new Copy({ input: config.theme.glob.input, globOptions: config.theme.glob.options });
 
     try {
       // Clear errors when dev mode is enabled
-      if (dev) this.js.errors = [];
+      if (dev) this.theme.errors = [];
 
-      await bundleJs.run();
+      await copyTheme.run();
     } catch (errors) {
-      this.js.errors = errors;
+      this.theme.errors = errors;
     }
 
     this.endSpinner({
-      type: "js",
+      type: "theme",
       startTime,
-      text: "bundling js files",
-      errors: this.js.errors,
+      text: "copying theme files",
     });
   }
 
@@ -165,6 +168,38 @@ export default class Build {
       startTime,
       text: "compiling scss files",
       errors: this.scss.errors,
+    });
+  }
+
+  /**
+   * Bundle js files
+   * @param {boolean} dev - Development mode
+   * @param {String} input - Input file - only used in dev mode
+   * @param {number} indent - Indentation level in the terminal
+   */
+  async buildJs({ dev = false, input, indent = 0 } = {}) {
+    const startTime = this.startSpinner({
+      type: "js",
+      text: "Bundling JS files...",
+      indent,
+    });
+
+    const bundleJs = new BundleJs({ input });
+
+    try {
+      // Clear errors when dev mode is enabled
+      if (dev) this.js.errors = [];
+
+      await bundleJs.run();
+    } catch (errors) {
+      this.js.errors = errors;
+    }
+
+    this.endSpinner({
+      type: "js",
+      startTime,
+      text: "bundling js files",
+      errors: this.js.errors,
     });
   }
 
@@ -202,14 +237,14 @@ export default class Build {
   /**
    * Copy public files
    */
-  async buildPublic({ dev = false, input, indent = 0 } = {}) {
+  async buildPublic({ dev = false, indent = 0 } = {}) {
     const startTime = this.startSpinner({
       type: "public",
       text: "Copying public files...",
       indent,
     });
 
-    const copyPublic = new CopyPublic({ input });
+    const copyPublic = new Copy({ input: config.assets.public.glob.input, globOptions: config.assets.public.glob.options });
 
     try {
       // Clear errors when dev mode is enabled

@@ -8,11 +8,11 @@ import chalk from "chalk";
 import fse from "fs-extra";
 
 export default class Watch extends Build {
-  constructor({ type, spinners } = { type: "", spinners: {} }) {
+  constructor({ type, glob, spinners } = {}) {
     super();
 
     this.type = type;
-    this.glob = config[this.type].glob.input; // E.g. config.assets.js.glob.input = "./src/assets/js/**/*.js"
+    this.glob = glob; // E.g. config.assets.js.glob.input = "./src/assets/js/**/*.js"
     this.spinners = spinners;
 
     this.errors = [];
@@ -74,7 +74,7 @@ export default class Watch extends Build {
             type = "css";
             break;
           default:
-            type = 'public';
+            type = input.includes(config.src.assetsDir) ? "public" : 'theme';
         }
 
         try {
@@ -83,10 +83,10 @@ export default class Watch extends Build {
             await super.run({ type, dev: true, input });
           } else {
             if (input.includes(config.src.assetsDir)) {
-              await fse.removeSync(`${config.theme.assetsDir}/${fileName}`);
+              await fse.remove(`${config.theme.assetsDir}/${fileName}`);
             } else {
               console.log(input.replace(config.src.root, config.theme.root));
-              await fse.removeSync(input.replace(config.src.root, config.theme.root));
+              await fse.remove(input.replace(config.src.root, config.theme.root));
             }
 
           }

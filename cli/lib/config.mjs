@@ -26,6 +26,7 @@ export default {
         ...globOptions,
         ignore: [
           `src/assets`,
+          `src/assets/**/*`,
         ]
       }
     },

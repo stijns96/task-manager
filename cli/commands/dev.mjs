@@ -3,6 +3,7 @@ import Watch from "../methods/watch.mjs";
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
+import config from "../lib/config.mjs";
 
 export default class Dev {
   constructor() {
@@ -31,12 +32,22 @@ export default class Dev {
 
   async watch() {
     // load parallel
-    await Promise.all([this.watchJs(), this.watchScss(), this.watchPublic()]);
+    await Promise.all([this.watchTheme(), this.watchJs(), this.watchScss(), this.watchPublic()]);
+  }
+
+  async watchTheme() {
+    const watch = new Watch({
+      type: "theme",
+      glob: config.theme.glob.input,
+      spinners: this.spinners,
+    });
+    await watch.run();
   }
 
   async watchJs() {
     const watch = new Watch({
       type: "js",
+      glob: config.assets.js.glob.input,
       spinners: this.spinners,
     });
     await watch.run();
@@ -45,6 +56,7 @@ export default class Dev {
   async watchScss() {
     const watch = new Watch({
       type: "scss",
+      glob: config.assets.scss.glob.input,
       spinners: this.spinners,
     });
     await watch.run();
@@ -53,6 +65,7 @@ export default class Dev {
   async watchPublic() {
     const watch = new Watch({
       type: "public",
+      glob: config.assets.public.glob.input,
       spinners: this.spinners,
     });
     await watch.run();

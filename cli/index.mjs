@@ -2,9 +2,6 @@ import Dev from "./commands/dev.mjs";
 import Build from "./commands/build.mjs";
 import Clean from "./commands/clean.mjs";
 
-// File system packages
-import { globSync } from "glob";
-
 // Terminal packages
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
@@ -29,8 +26,8 @@ class CLI {
    */
   run() {
     this.args.dev && this.dev();
-    this.args.build && this.build({ type: this.args.build });
-    this.args.clean && this.clean({ type: this.args.clean });
+    this.args.build && this.build();
+    this.args.clean && this.clean();
   }
 
   /**
@@ -44,23 +41,21 @@ class CLI {
 
   /**
    * Build assets
-   * @param {string} type - Type of file to build
    */
-  async build({ type }) {
-    const build = new Build({ type });
+  async build() {
+    const build = new Build();
 
     // Clean assets before building
-    await this.clean({ type });
+    await this.clean();
 
     await build.run();
   }
 
   /**
    * Clean assets
-   * @param {string} type - Type of file to clean
    */
-  async clean({ type }) {
-    const clean = new Clean({ type });
+  async clean() {
+    const clean = new Clean();
 
     await clean.run();
   }

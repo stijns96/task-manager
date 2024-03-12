@@ -10,9 +10,7 @@ import Spinnies from "spinnies";
 import chalk from "chalk";
 
 export default class Clean {
-  constructor({ type } = { type: "assets" }) {
-    this.type = type;
-
+  constructor() {
     // Glob
     this.globOptions = { posix: true };
 
@@ -26,67 +24,23 @@ export default class Clean {
   async run() {
     const startTime = this.startSpinner({
       type: this.type,
-      text: `Cleaning ${this.type}`,
+      text: `Cleaning theme`,
     })
 
-    await this[this.type]();
+    await this.theme();
 
     this.endSpinner({
       type: this.type,
       startTime,
-      text: `Cleaning ${this.type}`,
+      text: `Cleaning theme`,
     });
   }
 
   /**
    * Clean assets
    */
-  async assets() {
+  async theme() {
     fse.emptyDirSync(config.theme.root);
-  }
-
-  /**
-   * Clean js
-   */
-  async js() {
-    // Get all js files
-    const files = globSync(`${config.theme.assetsDir}/*.js`, this.globOptions);
-
-    // Remove all files
-    files.forEach((file) => fse.removeSync(file));
-  }
-
-  /**
-   * Clean css
-   */
-  async css() {
-    // Get all css files
-    const files = globSync(`${config.theme.assetsDir}/*.css`, this.globOptions);
-
-    // Remove all css files
-    files.forEach((file) => fse.removeSync(file));
-  }
-
-  /**
-   * Clean liquid
-   */
-  async liquid() {
-    // Get all liquid files
-    const files = globSync(`${config.theme.root}/**/*.liquid`, this.globOptions);
-
-    // Remove all liquid files
-    files.forEach((file) => fse.removeSync(file));
-  }
-
-  /**
-   * Clean json
-   */
-  async json() {
-    // Get all json files
-    const files = globSync(`${config.theme.root}/**/*.json`, this.globOptions);
-
-    // Remove all json files
-    files.forEach((file) => fse.removeSync(file));
   }
 
   /**
