@@ -1,7 +1,3 @@
-/theme
-
-
-
 # Node artifact files
 node_modules
 yarn.lock
@@ -26,3 +22,6 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+# Theme files
+/theme
