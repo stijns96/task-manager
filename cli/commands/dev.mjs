@@ -1,3 +1,5 @@
+import { spawn } from 'child_process';
+
 import Watch from "../scripts/watch.mjs";
 
 // Terminal packages
@@ -28,6 +30,8 @@ export default class Dev {
     this.spinners.succeed("dev", {
       text: `Development started (${chalk.blue(`${time.toFixed(2)}s`)})`,
     });
+
+    this.startShopifyServer();
   }
 
   async watch() {
@@ -69,5 +73,11 @@ export default class Dev {
       spinners: this.spinners,
     });
     await watch.run();
+  }
+
+  startShopifyServer() {
+    spawn("shopify", ["theme", "dev", "--path=theme"], {
+      stdio: "inherit"
+    })
   }
 }
