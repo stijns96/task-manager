@@ -1,6 +1,6 @@
-import Dev from "./commands/dev.mjs";
-import Build from "./commands/build.mjs";
-import Clean from "./commands/clean.mjs";
+import Dev from "./bin/dev.mjs";
+import Build from "./bin/build.mjs";
+import Clean from "./bin/clean.mjs";
 
 // Terminal packages
 import yargs from "yargs/yargs";
