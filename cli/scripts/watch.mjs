@@ -1,6 +1,6 @@
 import config from "../config.mjs";
 
-import Build from "../bin/build.mjs";
+import Build from "../commands/build.mjs";
 
 import { watch } from "chokidar";
 import chalk from "chalk";
