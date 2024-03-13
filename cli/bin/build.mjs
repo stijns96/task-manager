@@ -1,4 +1,4 @@
-import config from "../lib/config.mjs";
+import config from "../config.mjs";
 
 import BundleJs from "../scripts/js/bundle.mjs";
 import CompileScss from "../scripts/scss/compile.mjs";

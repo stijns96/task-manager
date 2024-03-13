@@ -1,4 +1,4 @@
-import config from "../lib/config.mjs";
+import config from "../config.mjs";
 
 
 // File system packages

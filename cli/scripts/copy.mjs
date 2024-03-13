@@ -1,7 +1,7 @@
 // File system packages
 import fse from "fs-extra";
 import { globSync } from "glob";
-import config from "../lib/config.mjs";
+import config from "../config.mjs";
 
 
 export default class Copy {

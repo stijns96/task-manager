@@ -3,7 +3,7 @@ import Watch from "../scripts/watch.mjs";
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
-import config from "../lib/config.mjs";
+import config from "../config.mjs";
 
 export default class Dev {
   constructor() {
