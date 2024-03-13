@@ -1,4 +1,4 @@
-import Watch from "../methods/watch.mjs";
+import Watch from "../scripts/watch.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";

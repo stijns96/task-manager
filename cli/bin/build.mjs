@@ -1,9 +1,9 @@
 import config from "../lib/config.mjs";
 
-import BundleJs from "../methods/js/bundle.mjs";
-import CompileScss from "../methods/scss/compile.mjs";
-import CompileTailwind from "../methods/tailwind/compile.mjs";
-import Copy from "../methods/copy.mjs";
+import BundleJs from "../scripts/js/bundle.mjs";
+import CompileScss from "../scripts/scss/compile.mjs";
+import CompileTailwind from "../scripts/tailwind/compile.mjs";
+import Copy from "../scripts/copy.mjs";
 
 // Terminal packages
 import Spinnies from "spinnies";
