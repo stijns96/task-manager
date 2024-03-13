@@ -27,7 +27,8 @@ export default {
         ignore: [
           `src/assets`,
           `src/assets/**/*`,
-        ]
+        ],
+        dot: true
       }
     },
   },
