@@ -75,8 +75,10 @@ export default class CompileScss {
             // Create the layer
             const layer = `@layer ${layerName} {\n${css}\n}`;
 
+            const data = layerName ? layer : css;
+
             // Write the file
-            fse.outputFile(`${config.theme.assetsDir}/${outputFileName}`, layer);
+            fse.outputFile(`${config.theme.assetsDir}/${outputFileName}`, data);
           });
       } catch (error) {
         this.errors.push(error);
