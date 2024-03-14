@@ -1,4 +1,9 @@
 import { spawn } from 'child_process';
+import fse from "fs-extra";
+
+import prompts from "prompts";
+
+import TOML from "@iarna/toml";
 
 import Watch from "../scripts/watch.mjs";
 
@@ -75,8 +80,33 @@ export default class Dev {
     await watch.run();
   }
 
-  startShopifyServer() {
-    spawn("shopify", ["theme", "dev", "--path=theme"], {
+  async startShopifyServer() {
+    console.log("Starting Shopify server... \n");
+
+    const tomlFile = fse.readFileSync("./shopify.theme.toml", "utf-8");
+    const { environments } = TOML.parse(tomlFile);
+
+    const choices = Object.entries(environments).map(([env, options]) => {
+      return {
+        title: `${env} - ${options.store}`,
+        value: env,
+      };
+    });
+
+    const selectedEnv = await prompts({
+      type: 'select',
+      name: 'value',
+      message: 'Select environment:',
+      choices
+    });
+
+    spawn("shopify", [
+      "theme",
+      "dev",
+      "--open",
+      "--path=theme",
+      `-e=${selectedEnv.value}`,
+    ], {
       stdio: "inherit"
     })
   }
