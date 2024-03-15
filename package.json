@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "node ./cli/index.mjs --dev",
-    "build": "node ./cli/index.mjs --build=assets",
-    "clean": "node ./cli/index.mjs --clean=assets",
-    "theme:pull": "shopify theme pull",
-    "theme:push": "shopify theme push --path=./theme",
+    "build": "node ./cli/index.mjs --build",
+    "clean": "node ./cli/index.mjs --clean",
+    "push": "node ./cli/index.mjs --push",
+    "theme:pull": "shopify theme pull -path=./theme",
     "theme:package": "shopify theme package --path=./theme"
   },
   "keywords": [],
