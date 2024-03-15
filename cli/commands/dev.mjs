@@ -105,6 +105,7 @@ export default class Dev {
       "dev",
       "--open",
       "--path=theme",
+      "--theme-editor-sync",
       `-e=${selectedEnv.value}`,
     ], {
       stdio: "inherit"
