@@ -85,7 +85,6 @@ export default class Watch extends Build {
             if (input.includes(config.src.assetsDir)) {
               await fse.remove(`${config.theme.assetsDir}/${fileName}`);
             } else {
-              console.log(input.replace(config.src.root, config.theme.root));
               await fse.remove(input.replace(config.src.root, config.theme.root));
             }
 

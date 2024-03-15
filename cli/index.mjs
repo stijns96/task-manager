@@ -2,6 +2,7 @@ import Dev from "./commands/dev.mjs";
 import Build from "./commands/build.mjs";
 import Clean from "./commands/clean.mjs";
 import Push from "./commands/push.mjs";
+import OpenAdmins from "./commands/openAdmins.mjs";
 
 // Terminal packages
 import yargs from "yargs/yargs";
@@ -18,6 +19,7 @@ class CLI {
       build: this.argv.build || false,
       clean: this.argv.clean || false,
       push: this.argv.push || false,
+      openAdmins: this.argv.openAdmins || false,
     };
 
     this.run();
@@ -31,6 +33,7 @@ class CLI {
     this.args.build && this.build();
     this.args.clean && this.clean();
     this.args.push && this.push();
+    this.args.openAdmins && this.openAdmins();
   }
 
   /**
@@ -70,6 +73,15 @@ class CLI {
     const push = new Push();
 
     await push.run();
+  }
+
+  /**
+   * Open Shopify admins
+   */
+  async openAdmins() {
+    const openAdmins = new OpenAdmins();
+
+    await openAdmins.run();
   }
 }
 

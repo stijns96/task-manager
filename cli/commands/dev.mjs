@@ -1,11 +1,6 @@
 import { getEnvironment } from "../scripts/envPrompt.mjs";
 
 import { spawn } from 'child_process';
-import fse from "fs-extra";
-
-import prompts from "prompts";
-
-import TOML from "@iarna/toml";
 
 import Watch from "../scripts/watch.mjs";
 

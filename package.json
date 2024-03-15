@@ -8,6 +8,7 @@
     "build": "node ./cli/index.mjs --build",
     "clean": "node ./cli/index.mjs --clean",
     "push": "node ./cli/index.mjs --push",
+    "open:admins": "node ./cli/index.mjs --open-admins",
     "theme:pull": "shopify theme pull -path=./theme",
     "theme:package": "shopify theme package --path=./theme"
   },
