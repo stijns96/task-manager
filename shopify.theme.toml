@@ -1,7 +1,5 @@
 [environments.dev]
 store = "cbt-development"
-path = "./theme"
 
 [environments.demo]
 store = "cbt-demo"
-path = "./theme"
