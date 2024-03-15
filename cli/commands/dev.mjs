@@ -1,3 +1,5 @@
+import { getEnvironment } from "../scripts/envPrompt.mjs";
+
 import { spawn } from 'child_process';
 import fse from "fs-extra";
 
@@ -81,32 +83,18 @@ export default class Dev {
   }
 
   async startShopifyServer() {
-    console.log("Starting Shopify server... \n");
+    console.log("\n");
 
-    const tomlFile = fse.readFileSync("./shopify.theme.toml", "utf-8");
-    const { environments } = TOML.parse(tomlFile);
+    const { value: { env, store } } = await getEnvironment()
 
-    const choices = Object.entries(environments).map(([env, options]) => {
-      return {
-        title: `${env} - ${options.store}`,
-        value: env,
-      };
-    });
-
-    const selectedEnv = await prompts({
-      type: 'select',
-      name: 'value',
-      message: 'Select environment:',
-      choices
-    });
-
+    spawn("open", [`https://admin.shopify.com/store/${store}/themes`])
     spawn("shopify", [
       "theme",
       "dev",
       "--open",
       "--path=theme",
       "--theme-editor-sync",
-      `-e=${selectedEnv.value}`,
+      `-e=${env}`,
     ], {
       stdio: "inherit"
     })
