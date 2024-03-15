@@ -1,6 +1,7 @@
 import Dev from "./commands/dev.mjs";
 import Build from "./commands/build.mjs";
 import Clean from "./commands/clean.mjs";
+import Push from "./commands/push.mjs";
 
 // Terminal packages
 import yargs from "yargs/yargs";
@@ -16,6 +17,7 @@ class CLI {
       dev: this.argv.dev || false,
       build: this.argv.build || false,
       clean: this.argv.clean || false,
+      push: this.argv.push || false,
     };
 
     this.run();
@@ -28,6 +30,7 @@ class CLI {
     this.args.dev && this.dev();
     this.args.build && this.build();
     this.args.clean && this.clean();
+    this.args.push && this.push();
   }
 
   /**
@@ -58,6 +61,15 @@ class CLI {
     const clean = new Clean();
 
     await clean.run();
+  }
+
+  /**
+   * Push to Shopify
+   */
+  async push() {
+    const push = new Push();
+
+    await push.run();
   }
 }
 
