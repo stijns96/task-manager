@@ -30,8 +30,6 @@ export default class CompileTailwind {
 
   async compileFile() {
     try {
-      let combinedContent = "";
-
       for (const input of this.inputs.reverse()) {
         const layerName = input.split("/").pop().replace(".scss", "");
         const { css } = sass.compile(input);
@@ -52,18 +50,14 @@ export default class CompileTailwind {
           from: input,
         });
 
-        if (result.css) {
-          const layer = `@layer ${layerName} {
-            ${result.css}
-          }\n`;
+        const layer = `@layer ${layerName} {
+          ${result.css}
+        }\n`;
 
-          // Voeg de inhoud toe aan de gecombineerde inhoud
-          combinedContent += layer;
-        }
+        // Schrijf de gecombineerde inhoud naar een uitvoerbestand
+        fse.outputFileSync(`${config.theme.assetsDir}/main-${layerName}.css`, layer);
       }
 
-      // Schrijf de gecombineerde inhoud naar een uitvoerbestand
-      fse.outputFileSync(`${config.theme.assetsDir}/main.css`, combinedContent);
     } catch (error) {
       this.errors.push(error);
     }
