@@ -1,0 +1,15 @@
+{% if file_name != blank %}
+  {%- break -%}
+{% endif %}
+
+{%- if preload == true -%}
+  {{ file_name | asset_url | stylesheet_tag: preload: true }}
+{%- else -%}
+  <link
+    rel="stylesheet"
+    href="{{ file_name | asset_url }}"
+    media="print"
+    onload="this.media='all'"
+  >
+  <noscript>{{ file_name | asset_url | stylesheet_tag }}</noscript>
+{% endif %}
