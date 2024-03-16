@@ -2,6 +2,7 @@ import Dev from "./commands/dev.mjs";
 import Build from "./commands/build.mjs";
 import Clean from "./commands/clean.mjs";
 import Push from "./commands/push.mjs";
+import PushAll from "./commands/pushAll.mjs";
 import OpenAdmins from "./commands/openAdmins.mjs";
 
 // Terminal packages
@@ -70,9 +71,16 @@ class CLI {
    * Push to Shopify
    */
   async push() {
-    const push = new Push();
+    await this.build();
 
-    await push.run();
+    if (this.argv.push === true) {
+      const push = new Push();
+      await push.run();
+    } else {
+      const pushAll = new PushAll();
+      await pushAll.run();
+    }
+
   }
 
   /**
