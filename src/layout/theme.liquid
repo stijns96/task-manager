@@ -7,12 +7,12 @@
     {{ content_for_header }}
 
     {%- liquid
-      render 'import-styles', preload: true
+      render 'html-head-css'
     -%}
   </head>
 
   <body class="group/body">
-    <main id="MainContent" class="focus-none content-for-layout" role="main" tabindex="-1">
+    <main id="MainContent" class="focus-none content-for-layout">
       {{ content_for_layout }}
     </main>
   </body>

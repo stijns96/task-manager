@@ -1,6 +1,8 @@
-{% if file_name != blank %}
-  {%- break -%}
-{% endif %}
+{%- liquid
+  if file_name == blank
+    break
+  endif
+-%}
 
 {%- if preload == true -%}
   {{ file_name | asset_url | stylesheet_tag: preload: true }}
