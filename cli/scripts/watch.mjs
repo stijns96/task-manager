@@ -12,8 +12,9 @@ export default class Watch extends Build {
     super();
 
     this.type = type;
-    this.glob = glob; // E.g. config.assets.js.glob.input = "./src/assets/js/**/*.js"
+    this.glob = glob;
     this.spinners = spinners;
+    this.watchOptions = config.watch.options;
 
     this.errors = [];
   }
@@ -25,7 +26,17 @@ export default class Watch extends Build {
       indent: 2,
     });
 
-    const watcher = watch(this.glob, config.watch.options);
+    if (this.type === "theme") {
+      this.watchOptions = {
+        ...this.watchOptions,
+        ignored: [
+          `src/assets`,
+          `src/assets/**/*`,
+        ],
+      };
+    }
+
+    const watcher = watch(this.glob, this.watchOptions);
 
     // Wait for the "ready" event before continuing
     await new Promise((resolve, reject) => {
