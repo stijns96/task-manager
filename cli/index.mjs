@@ -3,6 +3,7 @@ import Build from "./commands/build.mjs";
 import Clean from "./commands/clean.mjs";
 import Push from "./commands/push.mjs";
 import PushAll from "./commands/pushAll.mjs";
+import Pull from "./commands/pull.mjs";
 import OpenAdmins from "./commands/openAdmins.mjs";
 
 // Terminal packages
@@ -20,6 +21,7 @@ class CLI {
       build: this.argv.build || false,
       clean: this.argv.clean || false,
       push: this.argv.push || false,
+      pull: this.argv.pull || false,
       openAdmins: this.argv.openAdmins || false,
     };
 
@@ -34,6 +36,7 @@ class CLI {
     this.args.build && this.build();
     this.args.clean && this.clean();
     this.args.push && this.push();
+    this.args.pull && this.pull();
     this.args.openAdmins && this.openAdmins();
   }
 
@@ -80,7 +83,15 @@ class CLI {
       const pushAll = new PushAll();
       await pushAll.run();
     }
+  }
 
+  /**
+   * Pull from Shopify
+   */
+  async pull() {
+    const pull = new Pull();
+
+    await pull.run();
   }
 
   /**

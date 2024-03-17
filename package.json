@@ -9,9 +9,9 @@
     "clean": "node ./cli/index.mjs --clean",
     "push": "node ./cli/index.mjs --push",
     "push:all": "node ./cli/index.mjs --push=all",
+    "pull": "node ./cli/index.mjs --pull",
     "open:admins": "node ./cli/index.mjs --open-admins",
-    "theme:pull": "shopify theme pull -path=./theme",
-    "theme:package": "shopify theme package --path=./theme"
+    "package": "shopify theme package --path=./theme"
   },
   "keywords": [],
   "author": "",
