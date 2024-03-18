@@ -1,3 +1,5 @@
+# https://shopify.dev/docs/themes/tools/cli/environments
+
 [environments.dev]
 store = "cbt-development"
 
