@@ -1,43 +1,54 @@
-import { getEnvironment } from "../scripts/envPrompt.mjs";
-import { spawn } from 'child_process';
+import { envPrompt } from "../scripts/envPrompt.mjs";
+import fse from "fs-extra";
+import TOML from "@iarna/toml";
+import { spawn } from "child_process";
 
 export default class Push {
-  constructor() {
+  constructor({ options }) {
+    this.options = options;
+
+    this.all = options.all || false;
   }
 
-  async run(env) {
-    await this.push(env);
-  }
+  async run() {
+    const environments = await this.getEnvironments();
 
-  async push(env) {
-    let environment;
+    for (const env of environments) {
+      try {
+        // Await the completion of the spawn process for each environment
+        await new Promise((resolve, reject) => {
+          const process = spawn(
+            "shopify",
+            ["theme", "push", "--path=theme", `-e=${env}`],
+            {
+              stdio: "inherit",
+            },
+          );
 
-    if (env) {
-      environment = env;
-    } else {
-      const { value: { env: selectedEnv } } = await getEnvironment();
-      environment = selectedEnv;
+          process.on("close", (code) => {
+            code === 0
+              ? resolve()
+              : reject(new Error(`Push failed with code: ${code}`));
+          });
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
+  }
 
-    return new Promise((resolve, reject) => {
+  async getEnvironments() {
+    if (this.options.environments) return this.options.environments;
 
-      const process = spawn("shopify", [
-        "theme",
-        "push",
-        "--path=theme",
-        `-e=${environment}`,
-      ], {
-        stdio: "inherit"
-      })
+    const tomlFile = fse.readFileSync("./shopify.theme.toml", "utf-8");
+    const { environments } = TOML.parse(tomlFile);
 
-      process.on('close', (code) => {
-        if (code === 0) {
-          console.log("\n");
-          resolve(); // Push successful
-        } else {
-          reject(new Error(`Push failed with code: ${code}`)); // Handle error
-        }
-      });
-    });
+    if (this.all) return Object.keys(environments);
+
+    const {
+      value: { env },
+    } = await envPrompt();
+
+    return [env];
   }
 }
