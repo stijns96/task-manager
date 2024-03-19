@@ -91,4 +91,7 @@ program
     pull.run();
   });
 
+/**
+ * Parse the command line arguments.
+ */
 program.parse(process.argv);
