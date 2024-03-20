@@ -3,17 +3,14 @@ import { spawn } from "child_process";
 import getEnvironments from "../utils/getEnvironments.mjs";
 
 export default class Push {
-  constructor({ options }) {
-    this.options = options;
-
-    this.all = options.all || false;
+  constructor({ flags }) {
+    this.flags = flags;
   }
 
   async run() {
-    // Gebruik de functie
     const environments = await getEnvironments({
-      all: this.all,
-      environments: this.options.environments,
+      all: this.flags.all || false,
+      environments: this.flags.environments || null,
     });
 
     for (const env of environments) {
