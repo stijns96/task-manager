@@ -12,23 +12,21 @@ export default async ({ all, environments }) => {
   if (environments) return environments;
 
   const tomlFile = fse.readFileSync("./shopify.theme.toml", "utf-8");
-  const tomlEnvs = TOML.parse(tomlFile);
+  const tomlEnvs = TOML.parse(tomlFile).environments;
 
   // Return all environments if the --all flag is set
-  if (all) return Object.keys(tomlEnvs.environments);
+  if (all) return Object.keys(tomlEnvs);
 
   // Prompt the user to select an environment if no flags are set
-  const choices = Object.entries(tomlEnvs.environments).map(
-    ([env, options]) => {
-      return {
-        title: `${env} - ${options.store}`,
-        value: {
-          env,
-          store: options.store,
-        },
-      };
-    },
-  );
+  const choices = Object.entries(tomlEnvs).map(([env, options]) => {
+    return {
+      title: `${env} - ${options.store}`,
+      value: {
+        env,
+        store: options.store,
+      },
+    };
+  });
 
   // Store the selected environment
   const {
