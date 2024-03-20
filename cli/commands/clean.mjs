@@ -1,13 +1,11 @@
-import config from "../config.mjs";
-
-
 // File system packages
 import fse from "fs-extra";
-import { globSync } from "glob";
 
 // Terminal packages
 import Spinnies from "spinnies";
 import chalk from "chalk";
+
+import config from "../config.mjs";
 
 export default class Clean {
   constructor() {
@@ -25,7 +23,7 @@ export default class Clean {
     const startTime = this.startSpinner({
       type: this.type,
       text: `Cleaning theme`,
-    })
+    });
 
     await this.theme();
 
