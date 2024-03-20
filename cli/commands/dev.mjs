@@ -1,6 +1,6 @@
-import { getEnvironment } from "../scripts/envPrompt.mjs";
+import { spawn } from "child_process";
 
-import { spawn } from 'child_process';
+import getEnvironments from "../utils/getEnvironments.mjs";
 
 import Watch from "../scripts/watch.mjs";
 
@@ -10,7 +10,9 @@ import chalk from "chalk";
 import config from "../config.mjs";
 
 export default class Dev {
-  constructor() {
+  constructor({ flags }) {
+    this.flags = flags;
+
     // Spinner
     this.spinners = new Spinnies({
       succeedColor: "gray",
@@ -38,7 +40,12 @@ export default class Dev {
 
   async watch() {
     // load parallel
-    await Promise.all([this.watchTheme(), this.watchJs(), this.watchScss(), this.watchPublic()]);
+    await Promise.all([
+      this.watchTheme(),
+      this.watchJs(),
+      this.watchScss(),
+      this.watchPublic(),
+    ]);
   }
 
   async watchTheme() {
@@ -78,20 +85,26 @@ export default class Dev {
   }
 
   async startShopifyServer() {
-    console.log("\n");
+    console.log(`\n`);
 
-    const { value: { env, store } } = await getEnvironment()
+    const environments = await getEnvironments({
+      all: this.flags.all || false,
+      environments: this.flags.environment || null,
+    });
 
-    spawn("open", [`https://admin.shopify.com/store/${store}/themes`])
-    spawn("shopify", [
-      "theme",
-      "dev",
-      "--open",
-      "--path=theme",
-      "--theme-editor-sync",
-      `-e=${env}`,
-    ], {
-      stdio: "inherit"
-    })
+    spawn(
+      "shopify",
+      [
+        "theme",
+        "dev",
+        "--open",
+        "--path=theme",
+        "--theme-editor-sync",
+        `-e=${environments}`,
+      ],
+      {
+        stdio: "inherit",
+      },
+    );
   }
 }
