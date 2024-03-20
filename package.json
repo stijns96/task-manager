@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "node ./cli/index.mjs dev",
+    "dev:dev": "node ./cli/index.mjs dev -e dev",
+    "dev:demo": "node ./cli/index.mjs dev -e demo",
     "build": "node ./cli/index.mjs build",
     "clean": "node ./cli/index.mjs clean",
     "push": "node ./cli/index.mjs push",
