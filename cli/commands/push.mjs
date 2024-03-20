@@ -1,7 +1,8 @@
-import { envPrompt } from "../scripts/envPrompt.mjs";
 import fse from "fs-extra";
 import TOML from "@iarna/toml";
 import { spawn } from "child_process";
+
+import getEnvironments from "../utils/getEnvironments.mjs";
 
 export default class Push {
   constructor({ options }) {
@@ -11,12 +12,17 @@ export default class Push {
   }
 
   async run() {
-    const environments = await this.getEnvironments();
+    // Gebruik de functie
+    const environments = await getEnvironments({
+      all: this.all,
+      environments: this.options.environments,
+    });
 
     for (const env of environments) {
       try {
         // Await the completion of the spawn process for each environment
         await new Promise((resolve, reject) => {
+          console.log(`\n`);
           const process = spawn(
             "shopify",
             ["theme", "push", "--path=theme", `-e=${env}`],
@@ -35,20 +41,5 @@ export default class Push {
         console.error(error);
       }
     }
-  }
-
-  async getEnvironments() {
-    if (this.options.environments) return this.options.environments;
-
-    const tomlFile = fse.readFileSync("./shopify.theme.toml", "utf-8");
-    const { environments } = TOML.parse(tomlFile);
-
-    if (this.all) return Object.keys(environments);
-
-    const {
-      value: { env },
-    } = await envPrompt();
-
-    return [env];
   }
 }
