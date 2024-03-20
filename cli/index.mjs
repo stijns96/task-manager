@@ -23,9 +23,9 @@ program
     "-e, --environment <env_name>",
     `The ${terminalLink("environment", "https://shopify.dev/docs/themes/tools/cli/environments")} from your ${terminalLink("shopify.theme.toml", "shopify.theme.toml")} that you want to use.`,
   )
-  .action(async () => {
+  .action(async (options) => {
     const Dev = await import(`./commands/dev.mjs`);
-    const dev = new Dev.default();
+    const dev = new Dev.default({ flags: options });
     dev.run();
   });
 
@@ -73,9 +73,9 @@ program
     "-a, --all",
     `Pushes to all ${terminalLink("environments", "https://shopify.dev/docs/themes/tools/cli/environments")} from your ${terminalLink("shopify.theme.toml", "shopify.theme.toml")}.`,
   )
-  .action(async (options, command) => {
+  .action(async (options) => {
     const Push = await import(`./commands/push.mjs`);
-    const push = new Push.default({ options });
+    const push = new Push.default({ flags: options });
     push.run();
   });
 
