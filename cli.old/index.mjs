@@ -4,7 +4,7 @@ import Clean from "./commands/clean.mjs";
 import Push from "./commands/push.mjs";
 import PushAll from "./commands/pushAll.mjs";
 import Pull from "./commands/pull.mjs";
-import OpenAdmins from "./commands/openAdmins.mjs";
+import OpenAdmins from "./commands/open/admins.mjs";
 
 // Terminal packages
 import yargs from "yargs/yargs";

@@ -1,25 +1,18 @@
-import { getEnvironment } from "../scripts/envPrompt.mjs";
-import { spawn } from 'child_process';
+import { spawn } from "child_process";
+import getEnvironments from "../utils/getEnvironments.mjs";
 
 export default class Pull {
-  constructor() {
+  constructor({ flags }) {
+    this.flags = flags;
   }
 
   async run() {
-    await this.pull();
-  }
+    const environment = await getEnvironments({
+      environments: this.flags.environment || null,
+    });
 
-  async pull() {
-    const { value: { env: selectedEnv } } = await getEnvironment();
-
-    spawn("shopify", [
-      "theme",
-      "pull",
-      "--path=theme",
-      `-e=${selectedEnv}`,
-    ], {
-      stdio: "inherit"
-    })
-
+    spawn("shopify", ["theme", "pull", "--path=theme", `-e=${environment}`], {
+      stdio: "inherit",
+    });
   }
 }

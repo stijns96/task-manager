@@ -5,3 +5,6 @@ store = "cbt-development"
 
 [environments.demo]
 store = "cbt-demo"
+
+[environments.live]
+store = "cbt-demo"

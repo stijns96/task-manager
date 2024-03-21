@@ -1,7 +1,7 @@
-import { spawn } from "child_process";
+import { spawn, spawnSync } from "child_process";
 import getEnvironments from "../utils/getEnvironments.mjs";
 
-export default class Push {
+export default class Open {
   constructor({ flags }) {
     this.flags = flags;
   }
@@ -14,24 +14,27 @@ export default class Push {
 
     for (const key in environments) {
       const environment = key;
+      const { store } = environments[key];
 
       try {
         // Await the completion of the spawn process for each environment
         await new Promise((resolve, reject) => {
           console.log(`\n`);
-          const process = spawn(
-            "shopify",
-            ["theme", "push", "--path=theme", `-e=${environment}`],
-            {
+          try {
+            spawnSync("shopify", ["theme", "open", `-e=${environment}`], {
               stdio: "inherit",
-            },
-          );
+            });
 
-          process.on("close", (code) => {
-            code === 0
-              ? resolve()
-              : reject(new Error(`Push failed with code: ${code}`));
-          });
+            resolve();
+          } catch (error) {
+            reject(new Error(`Open failed with code: ${error}`));
+          } finally {
+            if (this.flags.admin) {
+              spawn("open", [
+                `https://admin.shopify.com/store/${store}/themes`,
+              ]);
+            }
+          }
         });
       } catch (error) {
         console.error(error);

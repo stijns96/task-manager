@@ -1,6 +1,13 @@
 import { program } from "commander";
 import terminalLink from "terminal-link";
 
+const SHOPIFY_ENVIRONMENTS_URL =
+  "https://shopify.dev/docs/themes/tools/cli/environments";
+const SHOPIFY_THEME_TOML_LINK = terminalLink(
+  "shopify.theme.toml",
+  "shopify.theme.toml",
+);
+
 const commaSeparatedList = (value, dummyPrevious) => value.split(",");
 
 /**
@@ -21,7 +28,7 @@ program
   )
   .option(
     "-e, --environment <env_name>",
-    `The ${terminalLink("environment", "https://shopify.dev/docs/themes/tools/cli/environments")} from your ${terminalLink("shopify.theme.toml", "shopify.theme.toml")} that you want to use.`,
+    `The ${terminalLink("environment", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to use.`,
   )
   .action(async (options) => {
     const Dev = await import(`./commands/dev.mjs`);
@@ -66,12 +73,12 @@ program
   )
   .option(
     "-e, --environments <env_names>",
-    `Comma separated list of the ${terminalLink("environments", "https://shopify.dev/docs/themes/tools/cli/environments")} from your ${terminalLink("shopify.theme.toml", "shopify.theme.toml")} that you want to push to.`,
+    `Comma separated list of the ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to push to.`,
     commaSeparatedList,
   )
   .option(
     "-a, --all",
-    `Pushes to all ${terminalLink("environments", "https://shopify.dev/docs/themes/tools/cli/environments")} from your ${terminalLink("shopify.theme.toml", "shopify.theme.toml")}.`,
+    `Pushes to all ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK}.`,
   )
   .action(async (options) => {
     const Push = await import(`./commands/push.mjs`);
@@ -85,10 +92,39 @@ program
 program
   .command("pull")
   .description("Retrieves theme files from Shopify in the theme folder.")
-  .action(async () => {
+  .option(
+    "-e, --environment <env_name>",
+    `The ${terminalLink("environment", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to use.`,
+  )
+  .action(async (options) => {
     const Pull = await import(`./commands/pull.mjs`);
-    const pull = new Pull.default();
+    const pull = new Pull.default({ flags: options });
     pull.run();
+  });
+
+/**
+ * The `open` command.
+ */
+program
+  .command("open")
+  .description("Opens the Shopify admin in your default browser.")
+  .option(
+    "-e, --environments <env_names>",
+    `Comma separated list of the ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to open the admin from.`,
+    commaSeparatedList,
+  )
+  .option(
+    "-a, --all",
+    `Opens all the admins from your ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK}.`,
+  )
+  .option(
+    "--admin",
+    `Opens the Shopify admin for the specified ${terminalLink("environment", SHOPIFY_ENVIRONMENTS_URL)}.`,
+  )
+  .action(async (options) => {
+    const Open = await import(`./commands/open.mjs`);
+    const open = new Open.default({ flags: options });
+    open.run();
   });
 
 /**

@@ -87,10 +87,11 @@ export default class Dev {
   async startShopifyServer() {
     console.log(`\n`);
 
-    const environments = await getEnvironments({
-      all: this.flags.all || false,
+    const environment = await getEnvironments({
       environments: this.flags.environment || null,
     });
+
+    const key = Object.keys(environment)[0];
 
     spawn(
       "shopify",
@@ -100,7 +101,7 @@ export default class Dev {
         "--open",
         "--path=theme",
         "--theme-editor-sync",
-        `-e=${environments}`,
+        `-e=${key}`,
       ],
       {
         stdio: "inherit",
