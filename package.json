@@ -13,11 +13,7 @@
     "push:all": "node ./cli/index.mjs push --all",
     "pull": "node ./cli/index.mjs pull",
     "split": "node ./cli/index.mjs pull",
-    "open": "node ./cli/index.mjs open",
-    "open:dev": "node ./cli/index.mjs open -e dev",
-    "open:dev:admin": "node ./cli/index.mjs open -e dev --admin",
-    "open:dev:demo:admins": "node ./cli/index.mjs open -e dev,demo --admin",
-    "open:admins": "node ./cli/index.mjs open --all --admin",
+    "open:admins": "node ./cli/index.mjs open --admins",
     "package": "shopify theme package --path=./theme"
   },
   "keywords": [],

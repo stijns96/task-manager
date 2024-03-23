@@ -109,17 +109,8 @@ program
   .command("open")
   .description("Opens the Shopify admin in your default browser.")
   .option(
-    "-e, --environments <env_names>",
-    `Comma separated list of the ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to open the admin from.`,
-    commaSeparatedList,
-  )
-  .option(
-    "-a, --all",
-    `Opens all the admins from your ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK}.`,
-  )
-  .option(
-    "--admin",
-    `Opens the Shopify admin for the specified ${terminalLink("environment", SHOPIFY_ENVIRONMENTS_URL)}.`,
+    "--admins",
+    `Opens all the Shopify admins  ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK}.`,
   )
   .action(async (options) => {
     const Open = await import(`./commands/open.mjs`);
