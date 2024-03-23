@@ -43,8 +43,7 @@
     "spinnies": "^0.5.1",
     "tailwindcss": "^3.4.1",
     "terminal-link": "^3.0.0",
-    "terser": "^5.29.2",
-    "yargs": "^17.7.2"
+    "terser": "^5.29.2"
   },
   "dependencies": {
     "@fancyapps/ui": "^4.0.31",
