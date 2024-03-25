@@ -2,7 +2,7 @@
   "[liquid]": {
     "editor.defaultFormatter": "Shopify.theme-check-vscode"
   },
-  "cSpell.words": ["dotfiles", "tailwindcss"],
+  "cSpell.words": ["dotfiles", "fullhuman", "purgecss", "tailwindcss"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "npm-scripts.showStartNotification": false
