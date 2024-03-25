@@ -1,5 +1,10 @@
 import { program } from "commander";
 import terminalLink from "terminal-link";
+import { globSync } from "glob";
+import compileScss from "./utils/compileScss.mjs";
+import config from "./config.mjs";
+
+import fse from "fs-extra";
 
 const SHOPIFY_ENVIRONMENTS_URL =
   "https://shopify.dev/docs/themes/tools/cli/environments";
