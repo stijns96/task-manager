@@ -59,7 +59,7 @@ export default class Build {
 
         case "css":
           await this.buildCss({ dev, input });
-          // Only build tailwind when in *NOT* dev mode. 
+          // Only build tailwind when in *NOT* dev mode.
           if (!dev) await this.buildTailwind({ dev });
           break;
 
@@ -121,7 +121,10 @@ export default class Build {
       indent,
     });
 
-    const copyTheme = new Copy({ input: config.theme.glob.input, globOptions: config.theme.glob.options });
+    const copyTheme = new Copy({
+      input: config.theme.glob.input,
+      globOptions: config.theme.glob.options,
+    });
 
     try {
       // Clear errors when dev mode is enabled
@@ -244,7 +247,10 @@ export default class Build {
       indent,
     });
 
-    const copyPublic = new Copy({ input: config.assets.public.glob.input, globOptions: config.assets.public.glob.options });
+    const copyPublic = new Copy({
+      input: config.assets.public.glob.input,
+      globOptions: config.assets.public.glob.options,
+    });
 
     try {
       // Clear errors when dev mode is enabled
