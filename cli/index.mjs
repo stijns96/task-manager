@@ -77,14 +77,19 @@ program
   .description(
     "Uploads your local theme files to Shopify, overwriting the remote version if specified.",
   )
-  .option(
-    "-e, --environments <env_names>",
-    `Comma separated list of the ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to push to.`,
-    commaSeparatedList,
+  .addOption(
+    new Option(
+      "-e, --environments <env_names>",
+      `Comma separated list of the ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to push to.`,
+    )
+      .conflicts("all")
+      .argParser(commaSeparatedList),
   )
-  .option(
-    "-a, --all",
-    `Pushes to all ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK}.`,
+  .addOption(
+    new Option(
+      "-a, --all",
+      `Pushes to all ${terminalLink("environments", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK}.`,
+    ).conflicts("environments"),
   )
   .action(async (options) => {
     const Push = await import(`./commands/push.mjs`);
