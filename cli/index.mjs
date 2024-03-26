@@ -5,6 +5,7 @@ import compileScss from "./utils/compileScss.mjs";
 import config from "./config.mjs";
 
 import fse from "fs-extra";
+import { Option } from "commander";
 
 const SHOPIFY_ENVIRONMENTS_URL =
   "https://shopify.dev/docs/themes/tools/cli/environments";
@@ -100,6 +101,21 @@ program
   .option(
     "-e, --environment <env_name>",
     `The ${terminalLink("environment", SHOPIFY_ENVIRONMENTS_URL)} from your ${SHOPIFY_THEME_TOML_LINK} that you want to use.`,
+  )
+  .addOption(
+    new Option(
+      "-d, --development",
+      `Downloads theme files from your remote ${terminalLink("development theme", "https://shopify.dev/docs/themes/tools/cli#development-themes")}.`,
+    ).conflicts("live"),
+  )
+  .addOption(
+    new Option("-l, --live", `Pulls the live theme from your store.`).conflicts(
+      "development",
+    ),
+  )
+  .option(
+    "-n, --nodelete",
+    "Runs the pull command without deleting local files.",
   )
   .action(async (options) => {
     const Pull = await import(`./commands/pull.mjs`);

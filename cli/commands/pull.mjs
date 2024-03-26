@@ -11,7 +11,18 @@ export default class Pull {
       environments: this.flags.environment || null,
     });
 
-    spawn("shopify", ["theme", "pull", "--path=theme", `-e=${environment}`], {
+    const args = [
+      "theme",
+      "pull",
+      "--path=theme",
+      `-e=${Object.keys(environment)[0]}`,
+    ];
+
+    if (this.flags.development) args.push("-d");
+    if (this.flags.live) args.push("-l");
+    if (this.flags.nodelete) args.push("-n");
+
+    spawn("shopify", args, {
       stdio: "inherit",
     });
   }
