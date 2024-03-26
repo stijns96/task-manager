@@ -1,10 +1,5 @@
 import { program } from "commander";
 import terminalLink from "terminal-link";
-import { globSync } from "glob";
-import compileScss from "./utils/compileScss.mjs";
-import config from "./config.mjs";
-
-import fse from "fs-extra";
 import { Option } from "commander";
 
 const SHOPIFY_ENVIRONMENTS_URL =
@@ -14,7 +9,7 @@ const SHOPIFY_THEME_TOML_LINK = terminalLink(
   "shopify.theme.toml",
 );
 
-const commaSeparatedList = (value, dummyPrevious) => value.split(",");
+const commaSeparatedList = (value) => value.split(",");
 
 /**
  * The main entry point for the CLI.
