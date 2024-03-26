@@ -11,7 +11,9 @@
     "push:dev": "node ./cli/index.mjs push -e dev",
     "push:dev:demo": "node ./cli/index.mjs push -e dev,demo",
     "push:all": "node ./cli/index.mjs push --all",
-    "pull": "node ./cli/index.mjs pull",
+    "pull": "node ./cli/index.mjs pull -n",
+    "pull:dev": "node ./cli/index.mjs pull -d -n",
+    "pull:live": "node ./cli/index.mjs pull -l -n",
     "open:admins": "node ./cli/index.mjs open --admins",
     "package": "shopify theme package --path=./theme"
   },
