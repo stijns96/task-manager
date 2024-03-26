@@ -28,22 +28,23 @@ export default async ({ file, purge, cascadeLayers }) => {
   }
 
   try {
-    // const { css } = await sass.compileAsync(file, {
-    //   importers: [
-    //     {
-    //       // An importer that redirects relative URLs starting with "~" to
-    //       // `node_modules`.
-    //       findFileUrl(url) {
-    //         if (!url.startsWith("~")) return null;
-    //         const baseUrl = pathToFileURL("node_modules/"); // Construct base URL
-    //         const resolvedUrl = new URL(url.substring(1), baseUrl); // Use base URL to resolve
-    //         return resolvedUrl;
-    //       },
-    //     },
-    //   ],
-    // });
-    // const result = await postcss(plugins).process(css, { from: file });
-    // return result.css;
+    const { css } = await sass.compileAsync(file, {
+      importers: [
+        {
+          // An importer that redirects relative URLs starting with "~" to
+          // `node_modules`.
+          findFileUrl(url) {
+            if (!url.startsWith("~")) return null;
+            const baseUrl = pathToFileURL("node_modules/"); // Construct base URL
+            const resolvedUrl = new URL(url.substring(1), baseUrl); // Use base URL to resolve
+            return resolvedUrl;
+          },
+        },
+      ],
+    });
+
+    const result = await postcss(plugins).process(css, { from: file });
+    return result.css;
   } catch (error) {
     // Return the error
     console.log(error);
