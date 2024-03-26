@@ -91,8 +91,6 @@ export default class Dev {
       environments: this.flags.environment || null,
     });
 
-    const key = Object.keys(environment)[0];
-
     spawn(
       "shopify",
       [
@@ -101,7 +99,7 @@ export default class Dev {
         "--open",
         "--path=theme",
         "--theme-editor-sync",
-        `-e=${key}`,
+        `-e=${Object.keys(environment)[0]}`,
       ],
       {
         stdio: "inherit",
