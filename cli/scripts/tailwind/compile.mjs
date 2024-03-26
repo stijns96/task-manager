@@ -1,24 +1,15 @@
-import config from "../../config.mjs";
-
 // File system packages
 import fse from "fs-extra";
 import { globSync } from "glob";
 
-// Compilers
-import * as sass from "sass";
-
-// PostCSS
-import postcss from "postcss";
-import autoprefixer from "autoprefixer";
-import postcssPresetEnv from "postcss-preset-env";
-import tailwind from "tailwindcss";
-import purgecss from "@fullhuman/postcss-purgecss";
+import config from "../../config.mjs";
+import compileScss from "../../utils/compileScss.mjs";
 
 export default class CompileTailwind {
   constructor() {
     this.inputs = globSync(
       config.assets.tailwind.glob.input,
-      config.assets.tailwind.glob.options
+      config.assets.tailwind.glob.options,
     );
 
     this.errors = [];
@@ -30,34 +21,26 @@ export default class CompileTailwind {
 
   async compileFile() {
     try {
-      for (const input of this.inputs.reverse()) {
-        const layerName = input.split("/").pop().replace(".scss", "");
-        const { css } = sass.compile(input);
+      // Store the promises in an array to await them later so they run concurrently
+      const promises = this.inputs.reverse().map(async (file) => {
+        const layerName = file.split("/").pop().replace(".scss", "");
+        const purge = layerName !== "base";
 
-        const postcssPlugins = [tailwind, autoprefixer, postcssPresetEnv()];
-
-        // Add purgecss if layerName is not base
-        if (layerName !== "base") {
-          postcssPlugins.push(
-            purgecss({
-              content: [...config.theme.glob.input, ...config.assets.js.glob.input],
-              skippedContentGlobs: config.theme.glob.options.ignore,
-            })
-          );
-        }
-
-        const result = await postcss(postcssPlugins).process(css, {
-          from: input,
-        });
+        const css = await compileScss({ file, purge });
 
         const layer = `@layer ${layerName} {
-          ${result.css}
+          ${css}
         }\n`;
 
         // Schrijf de gecombineerde inhoud naar een uitvoerbestand
-        fse.outputFileSync(`${config.theme.assetsDir}/main-${layerName}.css`, layer);
-      }
+        fse.outputFileSync(
+          `${config.theme.assetsDir}/main-${layerName}.css`,
+          layer,
+        );
+      });
 
+      // Await all promises
+      await Promise.all(promises);
     } catch (error) {
       this.errors.push(error);
     }
