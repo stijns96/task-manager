@@ -3,10 +3,9 @@ import fse from "fs-extra";
 import { globSync } from "glob";
 import config from "../config.mjs";
 
-
 export default class Copy {
   constructor({ input, globOptions } = {}) {
-    this.input = globSync(input, globOptions);
+    this.inputs = globSync(input, globOptions);
 
     this.errors = [];
   }
@@ -16,24 +15,27 @@ export default class Copy {
   }
 
   async copyFiles() {
-    for (const input of this.input) {
-      // Get the file name
-      const fileName = input.split('/').pop();
+    try {
+      // Store the promises in an array to await them later so they run concurrently
+      const promises = this.inputs.map(async (file) => {
+        // Get the file name
+        const fileName = file.split("/").pop();
 
-      const to = input.startsWith(config.src.assetsDir)
-        // Copy the file to theme/assets
-        ? `${config.theme.assetsDir}/${fileName}`
-        // Copy the file to e.g. theme/layout
-        : input.replace(config.src.root, config.theme.root);
+        const to = file.startsWith(config.src.assetsDir)
+          ? // Copy the file to theme/assets
+            `${config.theme.assetsDir}/${fileName}`
+          : // Copy the file to e.g. theme/layout
+            file.replace(config.src.root, config.theme.root);
 
-      try {
-        await fse.copy(input, to, {
+        fse.copySync(file, to, {
           preserveTimestamps: true,
         });
+      });
 
-      } catch (error) {
-        this.errors.push(error);
-      }
+      // Await all promises
+      await Promise.all(promises);
+    } catch (error) {
+      this.errors.push(error);
     }
 
     if (this.errors.length > 0) {
