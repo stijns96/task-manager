@@ -7,7 +7,7 @@ import compileScss from "../../utils/compileScss.mjs";
 
 export default class CompileScss {
   constructor({ input } = {}) {
-    this.input = input
+    this.inputs = input
       ? [input]
       : globSync(
           config.assets.scss.glob.input,
@@ -22,8 +22,9 @@ export default class CompileScss {
   }
 
   async compileFile() {
-    for (const file of this.input) {
-      try {
+    try {
+      // Store the promises in an array to await them later so they run concurrently
+      const promises = this.inputs.map(async (file) => {
         const css = await compileScss({ file });
 
         // Create file name based on the directory structure. E.g. sections-files.scss
@@ -51,9 +52,12 @@ export default class CompileScss {
 
         // Write the file
         fse.outputFile(`${config.theme.assetsDir}/${fileName}`, data);
-      } catch (error) {
-        this.errors.push(error);
-      }
+      });
+
+      // Await all promises
+      await Promise.all(promises);
+    } catch (error) {
+      this.errors.push(error);
     }
 
     if (this.errors.length > 0) {
